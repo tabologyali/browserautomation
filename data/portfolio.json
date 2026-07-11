@@ -1,22 +1,29 @@
 {
-  "name": "40K vs S&P",
+  "name": "40K vs S&P (UK book)",
+  "currency": "GBP",
   "inception_date": "2026-07-10",
   "starting_capital": 40000.0,
   "benchmark": {
-    "symbol": "SPY",
-    "inception_price": 754.95
+    "symbol": "VUSA.L",
+    "units": 374.8247,
+    "note": "S&P 500 UCITS ETF in GBP: (40000 - 9.95 commission) / 106.69 close 2026-07-10"
   },
-  "cash": 3151.18,
+  "costs": {
+    "commission_per_trade": 9.95,
+    "stamp_duty_rate": 0.005,
+    "note": "Stamp duty (SDRT) on purchases of UK-incorporated shares only; ETFs/ETCs and non-UK-incorporated (e.g. Glencore, Jersey) exempt"
+  },
+  "cash": 4637.29,
   "positions": [
-    {"symbol": "META",  "shares": 7,  "cost_basis": 669.21,  "opened": "2026-07-10", "thesis": "Contrarian: down ~12% YTD while earnings grow; cheapest Mag-7 cash machine"},
-    {"symbol": "TSM",   "shares": 11, "cost_basis": 434.11,  "opened": "2026-07-10", "thesis": "AI infrastructure toll booth; every AI chip goes through their fabs"},
-    {"symbol": "NVDA",  "shares": 19, "cost_basis": 210.96,  "opened": "2026-07-10", "thesis": "Flat YTD while hyperscaler capex guidance steps higher; multiple compressed"},
-    {"symbol": "IEMG",  "shares": 49, "cost_basis": 81.32,   "opened": "2026-07-10", "thesis": "EM leadership in H1 2026; diversification away from US megacap concentration"},
-    {"symbol": "AMZN",  "shares": 16, "cost_basis": 245.34,  "opened": "2026-07-10", "thesis": "AWS AI monetization + retail margin expansion"},
-    {"symbol": "ASML",  "shares": 2,  "cost_basis": 1797.32, "opened": "2026-07-10", "thesis": "Litho monopoly; +87% H1 momentum with structural moat"},
-    {"symbol": "GLD",   "shares": 8,  "cost_basis": 377.01,  "opened": "2026-07-10", "thesis": "Hedge: sticky inflation + late-July tariff event risk"},
-    {"symbol": "BRK-B", "shares": 6,  "cost_basis": 493.71,  "opened": "2026-07-10", "thesis": "Quality ballast; drawdown protection if AI trade cracks"},
-    {"symbol": "IWM",   "shares": 10, "cost_basis": 295.99,  "opened": "2026-07-10", "thesis": "Small-cap momentum broadening out in 2026"},
-    {"symbol": "MU",    "shares": 3,  "cost_basis": 979.30,  "opened": "2026-07-10", "thesis": "HBM memory supercycle; half-size because +154% YTD chase risk"}
+    {"symbol": "RR.L",   "shares": 333, "cost_basis": 14.38,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Defence/aerospace momentum leader; European rearmament cycle"},
+    {"symbol": "HSBA.L", "shares": 272, "cost_basis": 14.71,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "UK banks rally + BoE capital rules easing; Asia exposure"},
+    {"symbol": "PCT.L",  "shares": 587, "cost_basis": 6.81,   "stamp_duty": true,  "opened": "2026-07-10", "thesis": "AI/semis exposure via LSE trust (+54% H1, holds NVDA/MU/AMD)"},
+    {"symbol": "AZN.L",  "shares": 31,  "cost_basis": 128.34, "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Pharma quality; defensive earnings if AI trade cracks"},
+    {"symbol": "BA.L",   "shares": 173, "cost_basis": 18.51,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Defence order backlog; geopolitical tailwind"},
+    {"symbol": "SMT.L",  "shares": 216, "cost_basis": 14.78,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Growth/private tech via LSE; SpaceX IPO catalyst (+24% H1)"},
+    {"symbol": "SGLN.L", "shares": 54,  "cost_basis": 59.29,  "stamp_duty": false, "opened": "2026-07-10", "thesis": "Gold hedge: sticky inflation + late-July US tariff event"},
+    {"symbol": "VFEM.L", "shares": 52,  "cost_basis": 61.27,  "stamp_duty": false, "opened": "2026-07-10", "thesis": "EM outperformance H1 2026; diversification"},
+    {"symbol": "GLEN.L", "shares": 548, "cost_basis": 5.11,   "stamp_duty": false, "opened": "2026-07-10", "thesis": "Miners driving FTSE rally; commodity/China upcycle"},
+    {"symbol": "III.L",  "shares": 103, "cost_basis": 27.04,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Quality compounder (Action); consistent NAV growth"}
   ]
 }

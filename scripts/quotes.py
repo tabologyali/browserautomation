@@ -23,13 +23,18 @@ def fetch_quote(symbol: str, retries: int = 4) -> dict:
             with urllib.request.urlopen(req, timeout=20) as resp:
                 data = json.load(resp)
             meta = data["chart"]["result"][0]["meta"]
+            price = meta["regularMarketPrice"]
+            currency = meta.get("currency", "USD")
+            if currency == "GBp":  # LSE quotes in pence -> pounds
+                price /= 100
+                currency = "GBP"
             return {
                 "symbol": symbol,
-                "price": meta["regularMarketPrice"],
+                "price": price,
                 "time": time.strftime(
                     "%Y-%m-%d", time.gmtime(meta["regularMarketTime"])
                 ),
-                "currency": meta.get("currency", "USD"),
+                "currency": currency,
             }
         except Exception as e:  # noqa: BLE001 - retry on any transient failure
             last_err = e
