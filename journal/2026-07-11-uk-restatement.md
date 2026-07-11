@@ -57,3 +57,9 @@ Daily pre-market briefing (~7:00 London) every business day: overnight
 moves, news on holdings, and the day's instruction — buy/sell/hold with
 share counts, or explicitly "no action". Rebalance triggers: position
 >15% of book, thesis break, or >5% broad selloff (deploy cash).
+
+## Amendment (same day, pre-execution)
+
+Owner already holds HSBC elsewhere — HSBA.L (272 sh) replaced with
+LLOY.L (3,571 sh @ £1.12) before any orders were placed. Same UK-banks
+thesis, no personal overlap. Nothing else changes.

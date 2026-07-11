@@ -13,10 +13,10 @@
     "stamp_duty_rate": 0.005,
     "note": "Stamp duty (SDRT) on purchases of UK-incorporated shares only; ETFs/ETCs and non-UK-incorporated (e.g. Glencore, Jersey) exempt"
   },
-  "cash": 4637.29,
+  "cash": 4638.90,
   "positions": [
     {"symbol": "RR.L",   "shares": 333, "cost_basis": 14.38,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Defence/aerospace momentum leader; European rearmament cycle"},
-    {"symbol": "HSBA.L", "shares": 272, "cost_basis": 14.71,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "UK banks rally + BoE capital rules easing; Asia exposure"},
+    {"symbol": "LLOY.L", "shares": 3571, "cost_basis": 1.12,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "UK banks rally + BoE capital rules easing; pure UK domestic (owner holds HSBC elsewhere)"},
     {"symbol": "PCT.L",  "shares": 587, "cost_basis": 6.81,   "stamp_duty": true,  "opened": "2026-07-10", "thesis": "AI/semis exposure via LSE trust (+54% H1, holds NVDA/MU/AMD)"},
     {"symbol": "AZN.L",  "shares": 31,  "cost_basis": 128.34, "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Pharma quality; defensive earnings if AI trade cracks"},
     {"symbol": "BA.L",   "shares": 173, "cost_basis": 18.51,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Defence order backlog; geopolitical tailwind"},
