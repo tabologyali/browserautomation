@@ -9,3 +9,4 @@ date,action,symbol,shares,price,value,commission,stamp_duty,total_cost,rationale
 2026-07-10,BUY,VFEM.L,52,61.27,3186.04,9.95,0.00,3195.99,"EM diversification (Irish ETF, no stamp)"
 2026-07-10,BUY,GLEN.L,548,5.11,2800.28,9.95,0.00,2810.23,"Miners upcycle (Jersey-incorporated, no stamp)"
 2026-07-10,BUY,III.L,103,27.04,2785.12,9.95,13.93,2809.00,"Quality compounder"
+2026-07-22,BUY,PCT.L,175,6.59,1153.25,9.95,5.77,1168.97,"Add on thesis confirmation: Alphabet raised 2026 capex to $175-185bn while PCT still below entry"
