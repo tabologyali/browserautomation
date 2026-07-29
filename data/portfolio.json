@@ -13,11 +13,11 @@
     "stamp_duty_rate": 0.005,
     "note": "Stamp duty (SDRT) on purchases of UK-incorporated shares only; ETFs/ETCs and non-UK-incorporated (e.g. Glencore, Jersey) exempt"
   },
-  "cash": 3469.93,
+  "cash": 2606.44,
   "positions": [
     {"symbol": "RR.L",   "shares": 333, "cost_basis": 14.38,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Defence/aerospace momentum leader; European rearmament cycle"},
     {"symbol": "LLOY.L", "shares": 3571, "cost_basis": 1.12,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "UK banks rally + BoE capital rules easing; pure UK domestic (owner holds HSBC elsewhere)"},
-    {"symbol": "PCT.L",  "shares": 762, "cost_basis": 6.76,   "stamp_duty": true,  "opened": "2026-07-10", "thesis": "AI/semis exposure via LSE trust; added 2026-07-22 after Alphabet raised 2026 capex to $175-185bn"},
+    {"symbol": "PCT.L",  "shares": 901, "cost_basis": 6.66,   "stamp_duty": true,  "opened": "2026-07-10", "thesis": "AI/semis exposure via LSE trust; adds 2026-07-22 (Alphabet capex raise) and 2026-07-28 (611p, published 620p trigger)"},
     {"symbol": "AZN.L",  "shares": 31,  "cost_basis": 128.34, "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Pharma quality; defensive earnings if AI trade cracks"},
     {"symbol": "BA.L",   "shares": 173, "cost_basis": 18.51,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Defence order backlog; geopolitical tailwind"},
     {"symbol": "SMT.L",  "shares": 216, "cost_basis": 14.78,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Growth/private tech via LSE; SpaceX IPO catalyst (+24% H1)"},
