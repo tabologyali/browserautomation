@@ -63,3 +63,13 @@ share counts, or explicitly "no action". Rebalance triggers: position
 Owner already holds HSBC elsewhere — HSBA.L (272 sh) replaced with
 LLOY.L (3,571 sh @ £1.12) before any orders were placed. Same UK-banks
 thesis, no personal overlap. Nothing else changes.
+
+## Mandate clarification — 2026-08-05
+
+Owner confirmed he is not executing trades: this book is an
+idea-generation and performance-tracking tool while he evaluates the
+strategy before committing real money. (He independently holds ULVR
+and NG in his SIPP — overlap rules are moot for the paper book.)
+Consequences: the paper record from 2026-07-10 runs unbroken as the
+strategy's audited track record; briefings keep issuing explicit
+would-be instructions with share counts; no fill-confirmation loop.
