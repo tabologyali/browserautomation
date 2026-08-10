@@ -73,3 +73,15 @@ and NG in his SIPP — overlap rules are moot for the paper book.)
 Consequences: the paper record from 2026-07-10 runs unbroken as the
 strategy's audited track record; briefings keep issuing explicit
 would-be instructions with share counts; no fill-confirmation loop.
+
+## Mandate clarification #2 — 2026-08-10
+
+Owner: the goal is purely to beat the S&P — there is no requirement
+to hold US/tech exposure as index insurance. The inception-era
+rationale "PCT/SMT keep us from being left behind by a US tech rally"
+is retired. Consequences: every position must now stand on its
+absolute thesis alone (PCT = AI-capex supplier earnings; SMT = growth
+re-rating + private assets at a discount — both currently do);
+sizing is freed from benchmark-hugging; and the book accepts larger
+tracking swings vs the S&P in both directions as the price of being
+genuinely different from it.
