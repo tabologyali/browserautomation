@@ -13,3 +13,4 @@ date,action,symbol,shares,price,value,commission,stamp_duty,total_cost,rationale
 2026-07-28,BUY,PCT.L,139,6.11,849.29,9.95,4.25,863.49,"Published 620p trigger fired at 611p close; tranche sized to keep PCT under 15% cap into Fed + RR results"
 2026-08-03,SELL,AZN.L,31,115.00,3565.00,9.95,0.00,3555.05,"Thesis break: bought as defensive ballast, now a BMS mega-merger deal stock with months of overhang (Berenberg: shares likely remain depressed). Realized -413 loss."
 2026-08-04,BUY,ULVR.L,37,47.48,1756.76,9.95,8.78,1775.49,"Replace AZN ballast: Unilever Q2 volume+pricing beat; half-tranche only after +8% results pop, remainder triggers under ~4600p"
+2026-08-12,BUY,ULVR.L,36,45.70,1645.20,9.95,8.23,1663.38,"Published sub-4600p trigger fired at 4570p close; completes the AZN-replacement ballast slot at 2% below the tranche-1 price"
