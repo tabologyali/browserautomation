@@ -13,11 +13,11 @@
     "stamp_duty_rate": 0.005,
     "note": "Stamp duty (SDRT) on purchases of UK-incorporated shares only; ETFs/ETCs and non-UK-incorporated (e.g. Glencore, Jersey) exempt"
   },
-  "cash": 2722.62,
+  "cash": 3555.22,
   "positions": [
     {"symbol": "RR.L",   "shares": 333, "cost_basis": 14.38,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Defence/aerospace momentum leader; European rearmament cycle"},
     {"symbol": "LLOY.L", "shares": 3571, "cost_basis": 1.12,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "UK banks rally + BoE capital rules easing; pure UK domestic (owner holds HSBC elsewhere)"},
-    {"symbol": "PCT.L",  "shares": 901, "cost_basis": 6.66,   "stamp_duty": true,  "opened": "2026-07-10", "thesis": "AI/semis exposure via LSE trust; adds 2026-07-22 (Alphabet capex raise) and 2026-07-28 (611p, published 620p trigger)"},
+    {"symbol": "PCT.L",  "shares": 778, "cost_basis": 6.66,   "stamp_duty": true,  "opened": "2026-07-10", "thesis": "AI/semis exposure via LSE trust; adds 2026-07-22 and 2026-07-28; trimmed 123 sh 2026-08-13 at 685p on the 15% weight cap"},
     {"symbol": "BA.L",   "shares": 173, "cost_basis": 18.51,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Defence order backlog; geopolitical tailwind"},
     {"symbol": "SMT.L",  "shares": 216, "cost_basis": 14.78,  "stamp_duty": true,  "opened": "2026-07-10", "thesis": "Growth/private tech via LSE; SpaceX IPO catalyst (+24% H1)"},
     {"symbol": "ULVR.L", "shares": 73,  "cost_basis": 46.60,  "stamp_duty": true,  "opened": "2026-08-04", "thesis": "Defensive ballast replacing AZN: staples pricing power, Q2 volume+pricing beat; tranche 2 filled 2026-08-12 at 4,570p on published sub-4,600p trigger"},
