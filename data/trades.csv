@@ -15,3 +15,4 @@ date,action,symbol,shares,price,value,commission,stamp_duty,total_cost,rationale
 2026-08-04,BUY,ULVR.L,37,47.48,1756.76,9.95,8.78,1775.49,"Replace AZN ballast: Unilever Q2 volume+pricing beat; half-tranche only after +8% results pop, remainder triggers under ~4600p"
 2026-08-12,BUY,ULVR.L,36,45.70,1645.20,9.95,8.23,1663.38,"Published sub-4600p trigger fired at 4570p close; completes the AZN-replacement ballast slot at 2% below the tranche-1 price"
 2026-08-13,SELL,PCT.L,123,6.85,842.55,9.95,0.00,832.60,"15% weight cap fired (15.1% at close); trimmed back to ~13% per published rule, banking shares above every purchase price (6.81/6.59/6.11)"
+2026-09-04,BUY,LGEN.L,1000,2.92,2920.00,9.95,14.60,2944.55,"Positive-carry rate hedge: 30y gilt at 5.85% improves BPA/annuity economics while ~7% yield pays to wait. Fills the gap gold cannot cover against rising real yields. Funded by retiring the Shell 3300p trigger — cash cannot support both."
