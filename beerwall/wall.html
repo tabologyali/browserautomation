@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>On Tap</title>
+<style>
+  :root { --bg:#111; --card:#1c1c1c; --ink:#f4efe6; --muted:#b5ab9a; --accent:#f2a516; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; padding:2vw; }
+  header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1.5vw; }
+  header h1 { font-size:clamp(28px,3.2vw,72px); letter-spacing:.04em; text-transform:uppercase; }
+  header span { color:var(--muted); font-size:clamp(12px,.9vw,20px); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr)); gap:1.2vw; }
+  .beer { display:flex; gap:1.2vw; background:var(--card); border-radius:14px; padding:1vw; min-height:0; }
+  .art { flex:0 0 clamp(100px,10vw,220px); aspect-ratio:1; border-radius:10px; overflow:hidden; background:#000; }
+  .art img { width:100%; height:100%; object-fit:contain; display:block; }
+  .noart { display:grid; place-items:center; height:100%; font-size:4vw; }
+  .info { min-width:0; display:flex; flex-direction:column; gap:.4vw; }
+  .top { display:flex; justify-content:space-between; gap:1vw; align-items:baseline; }
+  h2 { font-size:clamp(18px,1.6vw,40px); line-height:1.1; }
+  .abv { color:var(--accent); font-weight:800; font-size:clamp(18px,1.5vw,38px); white-space:nowrap; }
+  .meta { color:var(--accent); font-size:clamp(12px,.95vw,22px); text-transform:uppercase; letter-spacing:.05em; }
+  .desc { color:var(--muted); font-size:clamp(12px,.85vw,20px); line-height:1.35; overflow:hidden;
+          display:-webkit-box; -webkit-line-clamp:6; -webkit-box-orient:vertical; }
+  .desc p + p { margin-top:.4em; }
+</style></head>
+<body>
+  <header><h1>On Tap</h1><span>Updated 25 Nov 2026</span></header>
+  <main class="grid">
+    <article class="beer">
+      <div class="art"><img src="art/7686588.jpeg" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>A Very Happy Ending</h2><span class="abv">5.2%</span></div>
+        <div class="meta">Porter - Other · Lost Cause Brewing Co</div>
+        <div class="desc"><p>Dry Sherry &amp; Raisin Porter</p><p>This one is made for a night by the fire</p><p>There&#x27;s something rather lovely about settling into your favourite pub, finding a spot by the fire and enjoying a proper winter warmer. This one is perfect for that.</p><p>A Very Happy Ending is our 5.2% Dry Sherry &amp; Raisin Porter, packed with rich dark molasses and spiced raisins on the nose, followed by a warming hint of sherry.</p><p>A little caramel and toasted malt bring some extra depth, with just enough of that festive fruit cake richness to keep things interesting.</p><p>Ending with a lovely dry finish that keeps everything balanced and makes it all too easy to go back for another.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/7653513.jpeg" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>Not Dead Yet</h2><span class="abv">5.9%</span></div>
+        <div class="meta">Stout - English · Lost Cause Brewing Co</div>
+        <div class="desc"><p>Oh, this one&#x27;s a treat! A gorgeous, rich and comforting stout packed with all those lovely flavours of toasted brown bread, caramel, nuttiness and a delicate hint of sesame. We even chucked actual brown bread into the brew for good measure! Wonderfully toasty, beautifully rounded and full of all those delicious biscuity, bready flavours that make a stout like this so utterly delightful.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/7651325.jpeg" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>We Sent 500 Ravens</h2><span class="abv">5.5%</span></div>
+        <div class="meta">IPA - Black / Cascadian Dark Ale · Lost Cause Brewing Co</div>
+        <div class="desc"><p>Brewed with our lovely pals David at Chin Chin and Malcolm at Five Towns Brewery, this one&#x27;s a bit of an illusion! Don&#x27;t let the dark colour fool you, it&#x27;s absolutely bursting with bright, juicy flavours of lime, mandarin and citrus, with a lovely hit of pine. Hopped with El Dorado, Azacca and Sabro, it&#x27;s got all those wonderful hoppy flavours you&#x27;d expect from a juicy IPA, just dressed in black!</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/6935573.jpeg" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>Wakey Wakey</h2><span class="abv">4.8%</span></div>
+        <div class="meta">Porter - Coffee · Lost Cause Brewing Co</div>
+        <div class="desc"><p>Using a medium roasted Kenyan coffee to bring a rich, roasty hit alongside a soft touch of vanilla sweetness, giving this stout plenty of depth without making it feel heavy.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/6921866.jpeg" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>Don&#x27;t Make Up Stories</h2><span class="abv">6.5%</span></div>
+        <div class="meta">Sour - Fruited · Lost Cause Brewing Co</div>
+        <div class="desc"><p>Juicy, fruity, tangy and tartly sour. Packed with plump, jammy blueberries, rounded out with juicy peach and finished with a vanilla sweetness. Bright, tangy and fruity AF.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/6921044.jpeg" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>I Like To Play</h2><span class="abv">6.5%</span></div>
+        <div class="meta">IPA - New England / Hazy · Lost Cause Brewing Co</div>
+        <div class="desc"><p>NEIPA w/ Citra 3 ways - T90, Lupomax and Spectrum. It’s no secret that Colin loves citra, so we’ve had a play</p><p>with this one. Layers of Citra on Citra on Citra, dry hopped at different stages with different types, to amplify</p><p>the hop flavour. Huge citrus, tropical fruit and sticky resinous flavours throughout.</p></div>
+      </div>
+    </article>
+  </main>
+</body></html>
