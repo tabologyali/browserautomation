@@ -16,6 +16,19 @@
   ],
   "beers": [
     {
+      "id": "manual:tsingtao-brewery-tsingtao",
+      "name": "Tsingtao",
+      "brewery": "Tsingtao Brewery",
+      "style": "Classic Lager",
+      "abv": "4.7%",
+      "description": "Rich in heritage, bold in taste. A lager of pure class.\nBrewed with malted barley, hops, yeast and pure mountain water for a crisp, refreshing beer.",
+      "art_url": "https://iprorwxhjjirlj5o.leadongcdn.com/cloud/mjBpjKppRliSpjnqrjlnk/LAGER.png",
+      "link": "",
+      "source_date": "",
+      "art": "art/manual_tsingtao-brewery-tsingtao.jpg",
+      "added_to_wall": "2026-11-25"
+    },
+    {
       "id": "brewyork.co.uk:20551",
       "name": "Lupu Lion (GF)",
       "brewery": "Brew York",
