@@ -5,14 +5,13 @@ For each beer it keeps the name, ABV, style, description and artwork, stores
 them in beers.json, downloads the art, and renders wall.html (a full-screen
 board for a TV or browser) plus beers.csv.
 
-Sources, in order of preference:
-  * Shopify brewery shops (most UK craft breweries, e.g. Lost Cause): read via
-    the shop's public product feed, which is exactly what powers their site.
-  * Any other product page: read from its schema.org / Open Graph tags.
-  * Anything else: add it by hand with `add-manual`.
+Reads the brewery's own shop feed (Shopify, WooCommerce or Squarespace), keeps
+in-stock beers only, and skips merch, spirits, tickets and packs. Other sites:
+`add <beer page url>` or `add-manual`.
 
-  python3 beerwall/beerwall.py follow https://www.lostcausebrewing.co.uk
-  python3 beerwall/beerwall.py update
+  python3 beerwall/beerwall.py search "Brew York"            # find a brewery's site
+  python3 beerwall/beerwall.py follow https://brewyork.co.uk --name "Brew York"
+  python3 beerwall/beerwall.py update                        # pull new beers
   python3 beerwall/beerwall.py add https://brewery.example/products/some-beer
   python3 beerwall/beerwall.py add-manual "Name" --abv 5.2 --style Porter --desc "..." --art label.png
   python3 beerwall/beerwall.py list | remove NAME | build --title "On Tap"
@@ -38,10 +37,14 @@ DB = HERE / "beers.json"
 ART = HERE / "art"
 WALL = HERE / "wall.html"
 CSV_OUT = HERE / "beers.csv"
-UA = "Mozilla/5.0 (compatible; beerwall/1.0)"
+UA = "beerwall/1.0"
 ABV_RE = re.compile(r"(\d{1,2}(?:\.\d{1,2})?)\s*%")
 # Products in a beer collection that aren't a single beer.
-NOT_A_BEER = re.compile(r"\b(mixed|gift|voucher|bundle|box|case of|selection|t-?shirt|hoodie|glass|merch|tote|cap)\b", re.I)
+NOT_A_BEER = re.compile(r"\b(mixed|gift|voucher|bundle|box|case of|cases?|selection|t-?shirt|hoodie|glass|tankard|"
+                        r"merch|tote|cap|hat|beanie|poster|print|sauce|pack|set|subscription|credit|advent|calendar|hamper|tasting|tour|"
+                        r"ticket|admission|early bird|experience|launch|event|gin|rum|vodka|whisky|whiskey|\d+cl)\b", re.I)
+PROMO_RE = re.compile(r"£|basket|special deal|free (delivery|shipping)|discount code|add to cart|^\[.*\]$", re.I)
+SIZE_RE = re.compile(r"^\d+\s*(ml|cl|l|litre|pint|oz)\b|^(can|bottle|keg|cask)$", re.I)
 
 
 # ---------------------------------------------------------------- storage
@@ -58,17 +61,17 @@ def save(db):
 
 # ---------------------------------------------------------------- fetching
 
-def fetch(url, binary=False):
+def fetch(url, binary=False, tries=3, timeout=30):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
-    for attempt in range(3):
+    for attempt in range(tries):
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
                 data = r.read()
                 return data if binary else data.decode("utf-8", "replace")
         except urllib.error.HTTPError:
             raise
         except Exception as e:  # noqa: BLE001  network blips
-            if attempt == 2:
+            if attempt == tries - 1:
                 raise
             print(f"  retrying {url} ({e})", file=sys.stderr)
             time.sleep(2 * (attempt + 1))
@@ -87,6 +90,7 @@ def text(fragment):
     s = re.sub(r"<[^>]+>", "", s)
     s = html.unescape(s).replace("\xa0", " ")
     lines = [re.sub(r"\s+", " ", ln).strip() for ln in s.splitlines()]
+    lines = [ln for ln in lines if not PROMO_RE.search(ln)]
     return re.sub(r"\n{3,}", "\n\n", "\n".join(lines)).strip()
 
 
@@ -137,6 +141,7 @@ def from_shopify(p, root, vendor=""):
         "art_url": imgs[0]["src"] if imgs else "",
         "link": f"{root}/products/{p['handle']}",
         "source_date": (p.get("published_at") or p.get("created_at") or "")[:10],
+        "in_stock": any(v.get("available", True) for v in p.get("variants") or [{}]),
     }
 
 
@@ -152,6 +157,167 @@ def shopify_products(root, collection):
         if len(data["products"]) < 250:
             return out
         page += 1
+
+
+def info_line(desc):
+    """Find a 'American Pale Ale | 4.3% | 440ml | Gluten Free' style line -> (abv, style, remaining text)."""
+    lines = desc.split("\n")
+    for i, ln in enumerate(lines[:4]):
+        if ABV_RE.search(ln) and ("|" in ln or "/" in ln or "·" in ln or len(ln) < 60):
+            parts = [p.strip() for p in re.split(r"\s*[|/·•]\s*|\s+[–—-]\s+", ln) if p.strip()]
+            abv = next((ABV_RE.search(p).group(1) + "%" for p in parts if ABV_RE.search(p)), "")
+            # style is the first other part; 'Barley Wine 13.0%' -> 'Barley Wine'
+            cleaned = [ABV_RE.sub("", p).replace("ABV", "").strip(" -–") for p in parts]
+            style = next((c for c in cleaned if c and not SIZE_RE.search(c)), "")
+            if len(style) > 50:  # that was a sentence, not an info line
+                continue
+            if abv:
+                return abv, style, "\n".join(lines[:i] + lines[i + 1:]).strip()
+    return abv_from(desc), "", desc
+
+
+def woo_beer(root, pid, title, body, img, link, date, brewery, in_stock=True, has_category=True):
+    abv, style, desc = info_line(text(body))
+    name, t_abv, t_style = split_title(html.unescape(title))
+    name = re.sub(r"\s*[–-]\s*(pre-?order|sold out|new)\s*$", "", name, flags=re.I)
+    return {"id": f"{urllib.parse.urlparse(root).netloc}:{pid}", "name": name, "brewery": brewery,
+            "style": style or t_style, "abv": abv or t_abv, "description": desc,
+            "art_url": img or "", "link": link, "source_date": (date or "")[:10],
+            "in_stock": in_stock, "has_category": has_category}
+
+
+def woo_products(root, collection=""):
+    """WooCommerce (WordPress) shops. Tries the Store API, then the WordPress product API."""
+    site = fetch_json(f"{root}/wp-json/") or {}
+    brewery = html.unescape(site.get("name", "")) or urllib.parse.urlparse(root).netloc
+    out, page = [], 1
+    while True:  # Store API
+        q = f"&category={collection}" if collection else ""
+        data = fetch_json(f"{root}/wp-json/wc/store/v1/products?per_page=100&page={page}{q}")
+        if not isinstance(data, list):
+            break
+        out += [woo_beer(root, p["id"], p["name"], p.get("description") or p.get("short_description", ""),
+                         (p.get("images") or [{}])[0].get("src"), p.get("permalink", ""), "", brewery,
+                         p.get("is_in_stock", True), bool(p.get("categories"))) for p in data]
+        if len(data) < 100:
+            return out
+        page += 1
+    if out:
+        return out
+    page = 1
+    while True:  # WordPress REST fallback (works even when the Store API is switched off)
+        data = fetch_json(f"{root}/wp-json/wp/v2/product?per_page=100&page={page}&_embed=wp:featuredmedia,wp:term")
+        if not isinstance(data, list):
+            return out if page > 1 else None
+        for p in data:
+            emb = p.get("_embedded", {})
+            terms = {t.get("slug") for grp in emb.get("wp:term", []) for t in grp if isinstance(t, dict)}
+            if collection and collection not in terms:
+                continue
+            img = (emb.get("wp:featuredmedia") or [{}])[0].get("source_url")
+            body = p["content"]["rendered"] or p.get("excerpt", {}).get("rendered", "")
+            cls = p.get("class_list") or []
+            cls = list(cls.values()) if isinstance(cls, dict) else cls
+            out.append(woo_beer(root, p["id"], p["title"]["rendered"], body, img, p.get("link", ""), p.get("date"), brewery,
+                                "outofstock" not in cls, any(c.startswith("product_cat-") for c in cls) or not cls))
+        if len(data) < 100:
+            return out
+        page += 1
+
+
+def squarespace_products(root, collection="shop"):
+    """Squarespace shops: every page has a ?format=json twin."""
+    url, out, brewery = f"{root}/{collection or 'shop'}?format=json", [], ""
+    while url:
+        data = fetch_json(url)
+        if not data or "items" not in data:
+            return out or None
+        brewery = brewery or data.get("website", {}).get("siteTitle", "")
+        for it in data["items"]:
+            abv, style, desc = info_line(text(it.get("body") or it.get("excerpt", "")))
+            name, t_abv, t_style = split_title(it.get("title", ""))
+            date = dt.datetime.utcfromtimestamp(it["publishOn"] / 1000).date().isoformat() if it.get("publishOn") else ""
+            out.append({"id": f"{urllib.parse.urlparse(root).netloc}:{it['id']}", "name": name, "brewery": brewery,
+                        "style": style or t_style, "abv": abv or t_abv, "description": desc,
+                        "art_url": it.get("assetUrl", ""), "link": root + it.get("fullUrl", ""), "source_date": date})
+        nxt = (data.get("pagination") or {}).get("nextPageUrl")
+        url = f"{root}{nxt}&format=json" if nxt else None
+    return out
+
+
+def detect_platform(root):
+    """Which kind of shop is this? -> (platform, default collection) or (None, reason)."""
+    if fetch_json(f"{root}/products.json?limit=1") is not None:
+        coll = next((c for c in ("beer", "beers", "all-beer") if shopify_products(root, c)), "")
+        return "shopify", coll
+    if isinstance(fetch_json(f"{root}/wp-json/wp/v2/product?per_page=1"), list) or \
+            isinstance(fetch_json(f"{root}/wp-json/wc/store/v1/products?per_page=1"), list):
+        return "woocommerce", ""
+    try:
+        home = fetch(root)
+    except Exception as e:  # noqa: BLE001
+        return None, f"couldn't load the site ({e})"
+    if "squarespace" in home.lower():
+        for coll in ("shop", "beer", "store", "beers"):
+            items = squarespace_products(root, coll)
+            if items:
+                return "squarespace", coll
+        return None, "Squarespace site, but its shop has no products listed"
+    return None, "no product feed found (not Shopify, WooCommerce or Squarespace)"
+
+
+def products_for(br):
+    platform = br.get("platform", "shopify")
+    if platform == "woocommerce":
+        return woo_products(br["site"], br.get("collection", "")) or []
+    if platform == "squarespace":
+        return squarespace_products(br["site"], br.get("collection", "")) or []
+    return [from_shopify(p, br["site"]) for p in (shopify_products(br["site"], br.get("collection", "")) or [])]
+
+
+STOP_WORDS = {"brewing", "brewery", "brewers", "brew", "co", "company", "beer", "the", "ltd", "and"}
+
+
+def candidate_sites(name):
+    words = re.sub(r"[^a-z0-9 ]", "", name.lower().replace("&", " and ")).split()
+    core = "".join(w for w in words if w not in STOP_WORDS)
+    bases = {"".join(words), core} | {core + s for s in ("brewing", "brewery", "brewingco", "brewco", "brew", "beer", "brewers")}
+    return [f"https://{www}{b}{tld}" for b in sorted(x for x in bases if x)
+            for tld in (".co.uk", ".com", ".uk", ".beer", ".co") for www in ("www.", "")]
+
+
+def probe(url):
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=8) as r:
+            return site_root(r.geturl()), r.read(400_000).decode("utf-8", "replace")
+    except Exception:  # noqa: BLE001  most guesses don't exist
+        return None
+
+
+def cmd_search(db, a):
+    from concurrent.futures import ThreadPoolExecutor
+    print(f"Looking for {a.name!r}'s website...")
+    core = [w for w in re.findall(r"[a-z0-9]+", a.name.lower()) if w not in STOP_WORDS]
+    with ThreadPoolExecutor(16) as pool:
+        hits = [h for h in pool.map(probe, candidate_sites(a.name)) if h]
+    seen, found = set(), 0
+    for root, page in hits:
+        host = urllib.parse.urlparse(root).netloc.removeprefix("www.")
+        m = re.search(r"<title[^>]*>(.*?)</title>", page, re.S)
+        title = text(m.group(1))[:80] if m else ""
+        hay = (title + " " + host).lower()
+        if host in seen or not all(w in hay for w in core) or not re.search(r"\b(beers?|brew\w*|ales?)\b", title, re.I):
+            continue  # someone else's site, or not a brewery
+        seen.add(host)
+        platform, coll = detect_platform(root)
+        found += bool(platform)
+        print(f"  {root}  \u201c{title}\u201d\n      " +
+              (f"\u2714 {platform} \u2014 beers can be pulled" if platform else f"\u2718 {coll}"))
+    if not seen:
+        print("  No website found by guessing. If you know it: follow <website>")
+    elif found:
+        print("\nTo add one: python3 beerwall/beerwall.py follow <website>")
 
 
 def from_page(url):
@@ -234,15 +400,14 @@ def add_beers(db, beers):
 
 def cmd_follow(db, a):
     root = site_root(a.site)
-    coll = a.collection
-    if coll is None:  # guess: a 'beer' collection if there is one, else everything
-        coll = next((c for c in ("beer", "beers", "all-beer", "all") if shopify_products(root, c)), "")
-    if shopify_products(root, coll) is None:
-        sys.exit(f"{root} doesn't look like a Shopify shop (or collection '{coll}' is wrong).\n"
-                 f"Use `add <product page url>` per beer, or `add-manual`.")
-    entry = {"site": root, "collection": coll, "since": a.since or ""}
+    platform, coll = detect_platform(root)
+    if not platform:
+        sys.exit(f"Can't pull beers from {root}: {coll}.\nUse `add <beer page url>` per beer, or `add-manual`.")
+    if a.collection is not None:
+        coll = a.collection
+    entry = {"site": root, "platform": platform, "collection": coll, "since": a.since or "", "name": a.name or ""}
     db["breweries"] = [x for x in db["breweries"] if x["site"] != root] + [entry]
-    print(f"Following {root} (collection: {coll or 'all products'})")
+    print(f"Following {root} ({platform}, collection: {coll or 'all products'})")
     save(db)
     cmd_update(db, a)
 
@@ -251,9 +416,14 @@ def cmd_update(db, a):
     total = 0
     for br in db["breweries"]:
         print(f"Checking {br['site']}")
-        products = shopify_products(br["site"], br["collection"]) or []
-        beers = [from_shopify(p, br["site"]) for p in products]
-        beers = [b for b in beers if b["abv"] and not NOT_A_BEER.search(b["name"])]
+        beers = products_for(br)
+        if br.get("name"):
+            for b in beers:
+                b["brewery"] = br["name"]
+        beers = [b for b in beers if b["abv"] and float(b["abv"].rstrip("%")) <= 20 and b.get("has_category", True)
+                 and not NOT_A_BEER.search(b["name"])]
+        if not getattr(a, "include_sold_out", False):
+            beers = [b for b in beers if b.get("in_stock", True)]
         if br.get("since"):
             beers = [b for b in beers if b["source_date"] >= br["since"]]
         beers.sort(key=lambda b: b["source_date"])  # oldest first -> newest ends up on top
@@ -376,11 +546,16 @@ TEMPLATE = """<!doctype html>
 def main():
     p = argparse.ArgumentParser(description="Keep a beer wall up to date from brewery websites.")
     sub = p.add_subparsers(dest="cmd", required=True)
-    f = sub.add_parser("follow", help="track a brewery's Shopify shop and pull its beers")
+    s = sub.add_parser("search", help="find a brewery's website by name and check it can be pulled")
+    s.add_argument("name")
+    f = sub.add_parser("follow", help="track a brewery's website and pull its beers")
     f.add_argument("site", help="brewery website, e.g. https://www.lostcausebrewing.co.uk")
     f.add_argument("--collection", help="shop collection to read (default: guess 'beer', else all products)")
     f.add_argument("--since", help="only beers published on the shop on/after YYYY-MM-DD")
-    sub.add_parser("update", help="pull new beers from every followed brewery")
+    f.add_argument("--include-sold-out", action="store_true")
+    f.add_argument("--name", help="brewery name to show (default: from the website)")
+    u = sub.add_parser("update", help="pull new beers from every followed brewery")
+    u.add_argument("--include-sold-out", action="store_true")
     ad = sub.add_parser("add", help="add beers by product page URL (any website)")
     ad.add_argument("urls", nargs="+")
     m = sub.add_parser("add-manual", help="add a beer by hand")
@@ -397,7 +572,7 @@ def main():
     b.add_argument("--title", help="heading shown on the wall")
     a = p.parse_args()
     db = load()
-    {"follow": cmd_follow, "update": cmd_update, "add": cmd_add, "add-manual": cmd_add_manual,
+    {"search": cmd_search, "follow": cmd_follow, "update": cmd_update, "add": cmd_add, "add-manual": cmd_add_manual,
      "remove": cmd_remove, "list": cmd_list, "build": cmd_build}[a.cmd](db, a)
 
 
