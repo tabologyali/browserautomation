@@ -16,6 +16,20 @@
   ],
   "beers": [
     {
+      "id": "www.northernmonk.com:15674317898111",
+      "name": "Faith",
+      "brewery": "Northern Monk",
+      "style": "Hazy Pale Ale",
+      "abv": "5.0%",
+      "description": "The hazy pale that started it all.\n\nFaith Hazy Pale Ale is brewed with northern pride and bursting with bright, juicy flavour. Smooth, tropical and effortlessly drinkable, it's the beer that defined who we are.\n\nYou've got to have Faith.\n\nTasting notes\n\nAppearance: Dark yellow colour with moderate haze, light to medium foam and light to medium lacing.\n\nAroma: Tropical pineapple, light citrus and stone fruit.\n\nTaste: Lightly sweet, gently bitter, with subtle lingering bitterness.\n\nMouthfeel: Light to medium body, soft carbonation and a slightly mouthwatering finish.",
+      "art_url": "https://cdn.shopify.com/s/files/1/2213/3151/files/A7400526_1_e3111ccc-8cb8-46c8-9c03-4b368c19d6c0.jpg?v=1781624287",
+      "link": "https://www.northernmonk.com/products/440ml-faith-hazy-pale-ale-5-0",
+      "source_date": "2026-05-12",
+      "in_stock": true,
+      "art": "art/www.northernmonk.com_15674317898111.jpg",
+      "added_to_wall": "2026-11-25"
+    },
+    {
       "id": "manual:tsingtao-brewery-tsingtao",
       "name": "Tsingtao",
       "brewery": "Tsingtao Brewery",

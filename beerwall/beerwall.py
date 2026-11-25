@@ -127,16 +127,34 @@ def abv_from(text_):
     return m.group(1) + "%" if m else ""
 
 
+GENERIC_TYPES = {"", "beer", "beers", "can", "cans", "single", "core", "product"}
+
+
+def from_handle(handle, name):
+    """'440ml-faith-hazy-pale-ale-5-0' -> ('5.0%', 'Hazy Pale Ale'); some shops only put these in the URL."""
+    m = re.search(r"-(\d{1,2})-(\d{1,2})$", handle)
+    if not m:
+        return "", ""
+    rest = re.sub(r"^\d+(ml|cl)-", "", handle[: m.start()])
+    slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    rest = rest[len(slug) + 1:] if slug and rest.startswith(slug + "-") else ""
+    return f"{m.group(1)}.{m.group(2)}%", rest.replace("-", " ").title()
+
+
 def from_shopify(p, root, vendor=""):
-    name, abv, style = split_title(p["title"], p.get("product_type", ""))
+    ptype = p.get("product_type", "")
+    name, abv, style = split_title(p["title"], "" if ptype.lower() in GENERIC_TYPES else ptype)
+    if name.isupper() and len(name) > 3:  # 'FAITH' -> 'Faith'
+        name = name.title().replace("'S", "'s").replace("’S", "’s")
     desc = text(p.get("body_html", ""))
+    h_abv, h_style = from_handle(p.get("handle", ""), name)
     imgs = p.get("images") or []
     return {
         "id": f"{urllib.parse.urlparse(root).netloc}:{p['id']}",
         "name": name,
         "brewery": p.get("vendor") or vendor,
-        "style": style or p.get("product_type", ""),
-        "abv": abv or abv_from(desc),
+        "style": style or h_style or ("" if ptype.lower() in GENERIC_TYPES else ptype),
+        "abv": abv or abv_from(desc) or h_abv,
         "description": desc,
         "art_url": imgs[0]["src"] if imgs else "",
         "link": f"{root}/products/{p['handle']}",
