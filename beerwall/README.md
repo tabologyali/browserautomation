@@ -1,27 +1,26 @@
 # Beer wall
 
-Pulls beers from Untappd (label artwork, ABV, style, description) and builds
-`wall.html`, a full-screen board for a TV or browser, plus `beers.csv` for
-importing into a menu or POS tool. Works for any brewery or single beer on
-Untappd. Python 3 standard library only.
+Pulls beers straight from brewery websites (name, ABV, style, description,
+artwork) and builds `wall.html`, a full-screen board for a TV or browser, plus
+`beers.csv` for menu/POS tools. Python 3 standard library only.
+
+How it reads breweries:
+- **Shopify shops** (Lost Cause and most UK craft breweries): `follow` reads the
+  shop's public product feed, so `update` picks up new beers as they're listed.
+- **Any other product page**: `add <url>` reads the page's product tags.
+- **Anything else**: `add-manual`.
 
 ```sh
-# track a brewery (Untappd slug or URL); --since/--limit stop it backfilling old beers
-python3 beerwall/beerwall.py follow Lost_Cause_Brewing_Co --since 2026-09-01
-
-# pull anything new from every tracked brewery (run whenever, or on a schedule)
-python3 beerwall/beerwall.py update
-
-# add any single beer from any brewery
-python3 beerwall/beerwall.py add https://untappd.com/b/<beer-slug>/<id>
-
+python3 beerwall/beerwall.py follow https://www.lostcausebrewing.co.uk   # track a brewery
+python3 beerwall/beerwall.py update                                     # pull anything new
+python3 beerwall/beerwall.py add https://somebrewery.co.uk/products/a-beer
+python3 beerwall/beerwall.py add-manual "Beer Name" --brewery X --abv 5.2 --style Porter --desc "..." --art label.png
 python3 beerwall/beerwall.py list
-python3 beerwall/beerwall.py remove "Not Dead Yet"      # take one off the wall
-python3 beerwall/beerwall.py build --title "On Tap"     # change heading / re-render
+python3 beerwall/beerwall.py remove "Lully"
+python3 beerwall/beerwall.py build --title "On Tap"
 ```
 
-Files: `beers.json` (the wall's data, editable by hand), `art/` (downloaded
-HD labels), `wall.html`, `beers.csv`.
+`follow` options: `--collection limited-range` to read a specific shop
+collection; `--since 2026-11-01` to skip beers listed before a date.
 
-Note: `update` reads the newest ~25 beers on a brewery's Untappd page, which
-covers new releases; use `add` for anything older.
+Files: `beers.json` (wall data, editable by hand), `art/`, `wall.html`, `beers.csv`.

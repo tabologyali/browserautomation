@@ -12,7 +12,7 @@
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr)); gap:1.2vw; }
   .beer { display:flex; gap:1.2vw; background:var(--card); border-radius:14px; padding:1vw; min-height:0; }
   .art { flex:0 0 clamp(100px,10vw,220px); aspect-ratio:1; border-radius:10px; overflow:hidden; background:#000; }
-  .art img { width:100%; height:100%; object-fit:contain; display:block; }
+  .art img { width:100%; height:100%; object-fit:cover; display:block; }
   .noart { display:grid; place-items:center; height:100%; font-size:4vw; }
   .info { min-width:0; display:flex; flex-direction:column; gap:.4vw; }
   .top { display:flex; justify-content:space-between; gap:1vw; align-items:baseline; }
@@ -27,51 +27,91 @@
   <header><h1>On Tap</h1><span>Updated 25 Nov 2026</span></header>
   <main class="grid">
     <article class="beer">
-      <div class="art"><img src="art/7686588.jpeg" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11228832923985.jpg" alt=""></div>
       <div class="info">
-        <div class="top"><h2>A Very Happy Ending</h2><span class="abv">5.2%</span></div>
-        <div class="meta">Porter - Other · Lost Cause Brewing Co</div>
-        <div class="desc"><p>Dry Sherry &amp; Raisin Porter</p><p>This one is made for a night by the fire</p><p>There&#x27;s something rather lovely about settling into your favourite pub, finding a spot by the fire and enjoying a proper winter warmer. This one is perfect for that.</p><p>A Very Happy Ending is our 5.2% Dry Sherry &amp; Raisin Porter, packed with rich dark molasses and spiced raisins on the nose, followed by a warming hint of sherry.</p><p>A little caramel and toasted malt bring some extra depth, with just enough of that festive fruit cake richness to keep things interesting.</p><p>Ending with a lovely dry finish that keeps everything balanced and makes it all too easy to go back for another.</p></div>
+        <div class="top"><h2>I Like To Play</h2><span class="abv">6.5%</span></div>
+        <div class="meta">NEIPA · Lost Cause Brewing Co</div>
+        <div class="desc"><p>NEIPA w/ Citra 3 ways - T90, Lupomax and Spectrum. It’s no secret that Colin loves citra, so we’ve had a play with this one. Layers of Citra on Citra on Citra, dry hopped at different stages with different types, to amplify the hop flavour. Huge citrus, tropical fruit and sticky resinous flavours throughout.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/7653513.jpeg" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11153797153105.jpg" alt=""></div>
       <div class="info">
-        <div class="top"><h2>Not Dead Yet</h2><span class="abv">5.9%</span></div>
-        <div class="meta">Stout - English · Lost Cause Brewing Co</div>
-        <div class="desc"><p>Oh, this one&#x27;s a treat! A gorgeous, rich and comforting stout packed with all those lovely flavours of toasted brown bread, caramel, nuttiness and a delicate hint of sesame. We even chucked actual brown bread into the brew for good measure! Wonderfully toasty, beautifully rounded and full of all those delicious biscuity, bready flavours that make a stout like this so utterly delightful.</p></div>
+        <div class="top"><h2>Got A Train To Catch</h2><span class="abv">6.5%</span></div>
+        <div class="meta">DDH IPA · Lost Cause Brewing Co</div>
+        <div class="desc"><p>Soft and pillowy, with peach and zesty tangerine on the nose, followed by juicy tropical fruit and a little tickle of blackcurrant from Audacia, Idaho 7 and Luminosa hops, with a sweet malty finish.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/7651325.jpeg" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11153825595729.png" alt=""></div>
       <div class="info">
-        <div class="top"><h2>We Sent 500 Ravens</h2><span class="abv">5.5%</span></div>
-        <div class="meta">IPA - Black / Cascadian Dark Ale · Lost Cause Brewing Co</div>
-        <div class="desc"><p>Brewed with our lovely pals David at Chin Chin and Malcolm at Five Towns Brewery, this one&#x27;s a bit of an illusion! Don&#x27;t let the dark colour fool you, it&#x27;s absolutely bursting with bright, juicy flavours of lime, mandarin and citrus, with a lovely hit of pine. Hopped with El Dorado, Azacca and Sabro, it&#x27;s got all those wonderful hoppy flavours you&#x27;d expect from a juicy IPA, just dressed in black!</p></div>
+        <div class="top"><h2>Stay In Your Lane</h2><span class="abv">4.8%</span></div>
+        <div class="meta">GF West Coast Pale · Lost Cause Brewing Co</div>
+        <div class="desc"><p>Brewed with Cascade for that classic West Coast bitterness, then dry hopped with Enigma &amp; Strata for juicy melon, passionfruit and plenty of piney, resinous character. A modern take on a classic West Coast pale. [GLUTEN FREE]</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/6935573.jpeg" alt=""></div>
-      <div class="info">
-        <div class="top"><h2>Wakey Wakey</h2><span class="abv">4.8%</span></div>
-        <div class="meta">Porter - Coffee · Lost Cause Brewing Co</div>
-        <div class="desc"><p>Using a medium roasted Kenyan coffee to bring a rich, roasty hit alongside a soft touch of vanilla sweetness, giving this stout plenty of depth without making it feel heavy.</p></div>
-      </div>
-    </article>
-    <article class="beer">
-      <div class="art"><img src="art/6921866.jpeg" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11174875922769.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Don&#x27;t Make Up Stories</h2><span class="abv">6.5%</span></div>
-        <div class="meta">Sour - Fruited · Lost Cause Brewing Co</div>
+        <div class="meta">Blueberry, Peach &amp; Vanilla Sour · Lost Cause Brewing Co</div>
         <div class="desc"><p>Juicy, fruity, tangy and tartly sour. Packed with plump, jammy blueberries, rounded out with juicy peach and finished with a vanilla sweetness. Bright, tangy and fruity AF.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/6921044.jpeg" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_9471764889937.png" alt=""></div>
       <div class="info">
-        <div class="top"><h2>I Like To Play</h2><span class="abv">6.5%</span></div>
-        <div class="meta">IPA - New England / Hazy · Lost Cause Brewing Co</div>
-        <div class="desc"><p>NEIPA w/ Citra 3 ways - T90, Lupomax and Spectrum. It’s no secret that Colin loves citra, so we’ve had a play</p><p>with this one. Layers of Citra on Citra on Citra, dry hopped at different stages with different types, to amplify</p><p>the hop flavour. Huge citrus, tropical fruit and sticky resinous flavours throughout.</p></div>
+        <div class="top"><h2>Kastenbräu</h2><span class="abv">4.8%</span></div>
+        <div class="meta">Munich Style Helles Lager · Lost Cause Brewing Co</div>
+        <div class="desc"><p>CRISP | REFRESHING | MALTY</p><p>Brewed to Bavarian standards, Kastenbräu has been laying low in horizontal lagering tanks for an authentic clean crisp flavour and smooth drinkability. Light and refreshing with a subtle malt sweetness.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933459386705.png" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>Herding Chickens</h2><span class="abv">3.4%</span></div>
+        <div class="meta">Table Beer · Lost Cause Brewing Co</div>
+        <div class="desc"><p>Light, crisp, fragrant and fruity, this is a summer beer made for sunshine and relaxed times drinking in a field somewhere, pref. with a tent up and a BBQ cookin&#x27;. Notes of lemon zest, soft pear drop and a light floral finish keep it bright, dry and refreshing.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933468070225.png" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>Hocus Pocus Soft Focus</h2><span class="abv">3.0%</span></div>
+        <div class="meta">Apricot Pale Ale · Lost Cause Brewing Co</div>
+        <div class="desc"><p>A soft and fuzzy pale ale made for some seasonal supping. Light and fruity, this thirst quenching little number is packed with apricot puree for loads of soft stone fruit character, backed by bright hits of Centennial bringing citrus zest and a slight floral edge.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933470331217.png" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>Wuzza Wuzza</h2><span class="abv">4.8%</span></div>
+        <div class="meta">DDH Pale Ale · Lost Cause Brewing Co</div>
+        <div class="desc"><p>An easy-drinking hazy pale with soft peach and citrus, gentle tropical notes of papaya, pineapple and nectarine, and a finish that snaps with pink lemonade brightness and a subtle dank edge. With Luminosa, Strata and Nectaron.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_9099268260177.png" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>Lully</h2><span class="abv">4%</span></div>
+        <div class="meta">Citra Pale Ale · Lost Cause Brewing Co</div>
+        <div class="desc"><p>MELON | MANGO | GUAVA</p><p>No frills needed for this delightful pale ale. Lully, our only core beer tastes like a citrus dream. Hopped with 100% Citra, this easy-sipping, mellow hazy pale ale brings tons of those sherbet citrussy aromas with a big beefy mouthfeel that punches well above its weight. It’s juicy, fruity, and easy drinking - everything you’d want from a session pale ale.</p><p>Hops: Citra, Citra, Citra</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10805924856145.png" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>Nonsense Nonsense</h2><span class="abv">8%</span></div>
+        <div class="meta">DIPA · Lost Cause Brewing Co</div>
+        <div class="desc"><p>A double take on our core beer, Lully. All citra hops give out bright and zesty citrus, ripe mango on the nose with peach and a touch of pine. Full, hazy and pillowy with juicy tropical fruit and lemen sherbert flavours.</p></div>
+      </div>
+    </article>
+    <article class="beer">
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10723955900753.png" alt=""></div>
+      <div class="info">
+        <div class="top"><h2>In The Club Style</h2><span class="abv">5.2%</span></div>
+        <div class="meta">Standard Stout · Lost Cause Brewing Co</div>
+        <div class="desc"><p>This smooth and easy drinking number packs cocoa hints, rich and creamy espresso and the rounded fruitiness from hedgerow berries in a perfectly balanced harmony of flavour and finesse.</p></div>
       </div>
     </article>
   </main>
