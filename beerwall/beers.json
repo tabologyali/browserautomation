@@ -16,6 +16,20 @@
   ],
   "beers": [
     {
+      "id": "www.blindcornerbrewery.com:drop-ride",
+      "name": "Drop Ride",
+      "brewery": "Blind Corner Brewery",
+      "style": "West Coast IPA",
+      "abv": "6.0%",
+      "description": "Eyes up, and keep pace. Classic, with notes and aromas like dried apricot, Seville orange, and the grip of resinous cedar.",
+      "art_url": "https://images.squarespace-cdn.com/content/v1/67228b200662312c040d01d5/925860d1-be60-47a7-8302-4e7d864c87c9/DropRide_WB.png",
+      "link": "https://www.blindcornerbrewery.com/Beer",
+      "source_date": "",
+      "in_stock": true,
+      "art": "art/www.blindcornerbrewery.com_drop-ride.jpg",
+      "added_to_wall": "2026-11-25"
+    },
+    {
       "id": "brewyork.co.uk:20460",
       "name": "Juice Forsyth",
       "brewery": "Brew York",
