@@ -16,6 +16,21 @@
   ],
   "beers": [
     {
+      "id": "brewyork.co.uk:20460",
+      "name": "Juice Forsyth",
+      "brewery": "Brew York",
+      "style": "Fruited IPA",
+      "abv": "5.0%",
+      "description": "Good game, good game!\n\nDo you wanna go higher?\n\nThen enjoy this juicy bonus fruited IPA that combines Cascade, Citra, Columbus and Mosaic hops with guava and mango for a tropical explosion as bold and juicy as the legendary entertainer this salutes!\n\nIngredients\n\nWater, Barley, Wheat, Oats, Lactose (Milk), Guava, Mango, Hops, Yeast\n\nVegetarian\n\nFlavour Profile\n\nHops\n\nFruit\n\nSweet\n\nMouthfeel\n\nBitter\n\nMalt",
+      "art_url": "https://brewyork.co.uk/wp-content/uploads/2025/01/JuiceForsyth_SingleCan_2025.png",
+      "link": "https://brewyork.co.uk/product/juice-forsyth/",
+      "source_date": "2021-10-26",
+      "in_stock": true,
+      "has_category": true,
+      "art": "art/brewyork.co.uk_20460.jpg",
+      "added_to_wall": "2026-11-25"
+    },
+    {
       "id": "churchstreetbrew.com:3620772",
       "name": "Church Street Pilsner",
       "brewery": "Church Street Brewing Company",

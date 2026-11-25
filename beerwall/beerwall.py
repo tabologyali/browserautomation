@@ -38,7 +38,7 @@ ART = HERE / "art"
 WALL = HERE / "wall.html"
 CSV_OUT = HERE / "beers.csv"
 UA = "beerwall/1.0"
-ABV_RE = re.compile(r"(\d{1,2}(?:\.\d{1,2})?)\s*%")
+ABV_RE = re.compile(r"(?<![\d.])(\d{1,2}(?:\.\d{1,2})?)\s*%")
 # Products in a beer collection that aren't a single beer.
 NOT_A_BEER = re.compile(r"\b(mixed|gift|voucher|bundle|box|case of|cases?|selection|t-?shirt|hoodie|glass|tankard|"
                         r"merch|tote|cap|hat|beanie|poster|print|sauce|pack|set|subscription|credit|advent|calendar|hamper|tasting|tour|"
@@ -265,6 +265,115 @@ def squarespace_products(root, collection="shop"):
     return out
 
 
+MENU_PATH = re.compile(r"/(our-)?beers?(/|$)|beverages|on-tap|tap-?list|our-range|core-range|the-beers|drinks", re.I)
+
+
+def page_lines(h):
+    """HTML -> lines of text, with images as ('img', url) and headings as ('h', text)."""
+    h = re.sub(r"(?is)<(script|style|noscript|svg)\b.*?</\1>", " ", h)
+
+    def img(m):
+        tag = m.group(0)
+        u = re.search(r'data-src="([^"]+)"', tag) or re.search(r'data-image="([^"]+)"', tag) or \
+            re.search(r'srcset="([^" ,]+)', tag) or re.search(r'\ssrc="([^"]+)"', tag)
+        url = html.unescape(u.group(1)) if u else ""
+        return f"\n\x00{url}\n" if url and "placeholder" not in url and not url.startswith("data:") else " "
+    h = re.sub(r"(?is)<img\b[^>]*>", img, h)
+    h = re.sub(r"(?is)<h[1-6]\b[^>]*>(.*?)</h[1-6]>", lambda m: "\n\x01" + re.sub(r"<[^>]+>", " ", m.group(1)) + "\n", h)
+    t = text(h)
+    out = []
+    for ln in t.split("\n"):
+        ln = ln.strip()
+        if ln.startswith("\x00"):
+            out.append(("img", ln[1:]))
+        elif ln.startswith("\x01") and ln[1:].strip():
+            out.append(("h", ln[1:].strip()))
+        elif ln:
+            out.append(("t", ln))
+    return out
+
+
+def menu_page_beers(root, page_url, brewery=""):
+    """Beers from a brewery's own 'our beers' page: a name, a style, 'ABV 6.0%', a description, a picture."""
+    try:
+        lines = page_lines(fetch(page_url, tries=1))
+    except Exception:  # noqa: BLE001
+        return []
+    beers, last_img = [], ""
+    for i, (kind, val) in enumerate(lines):
+        if kind == "img":
+            last_img = val
+        if kind == "img" or not ABV_RE.search(val) or len(val) > 400:
+            continue
+        # walk back to the beer's name: nearest heading, else nearest short line
+        j, name_i = i - 1, None
+        while j >= max(0, i - 6):
+            k, v = lines[j]
+            if k == "h":
+                name_i = j
+                break
+            if k == "t" and len(v) < 60 and not ABV_RE.search(v) and name_i is None and j < i:
+                name_i = j
+            j -= 1
+        if name_i is None:
+            continue
+        name = lines[name_i][1]
+        if ABV_RE.search(name) or len(name) < 2:
+            continue
+        between = [v for k, v in lines[name_i + 1:i] if k != "img"]
+        style = next((v for v in between if len(v) < 45 and ":" not in v and not ABV_RE.search(v)), "")
+        img = next((v for k, v in reversed(lines[max(0, name_i - 4):i + 1]) if k == "img"), "") or last_img
+        after = [v for k, v in lines[i:i + 6] if k == "t"]
+        desc = max([v for v in between + after if len(v) > 40] or [""], key=len)
+        desc = re.sub(r"\*([^*]+)\*\s*", "", desc)
+        desc = re.sub(r"\s*\d{1,2}(\.\d+)?\s*%\s*(ABV)?\.?\s*$", "", desc).strip()
+        if (name.isupper() or name.islower()) and len(name) > 3:
+            name = name.title()
+        if style.islower() or style.isupper():
+            style = re.sub(r"\b(Ipa|Dipa|Neipa|Ddh|Apa|Xpa|Gf|Ba)\b", lambda x: x.group(1).upper(), style.title())
+        if img.startswith("//"):
+            img = "https:" + img
+        beers.append({"id": f"{urllib.parse.urlparse(root).netloc}:{re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')}",
+                      "name": name, "brewery": brewery, "style": style,
+                      "abv": ABV_RE.search(val).group(1) + "%", "description": desc,
+                      "art_url": img if img.startswith("http") else urllib.parse.urljoin(page_url, img) if img else "",
+                      "link": page_url, "source_date": "", "in_stock": True})
+    seen, out = set(), []
+    for b in beers:
+        if b["id"] not in seen:
+            seen.add(b["id"])
+            out.append(b)
+    return out
+
+
+def menu_pages(root, home=None):
+    """The brewery's own beer-list pages, found from its homepage links."""
+    try:
+        home = home or fetch(root, tries=1)
+    except Exception:  # noqa: BLE001
+        return []
+    links = []
+    for href in re.findall(r'href="([^"#?]+)"', home):
+        u = urllib.parse.urljoin(root + "/", href)
+        if urllib.parse.urlparse(u).netloc.removeprefix("www.") == urllib.parse.urlparse(root).netloc.removeprefix("www.") \
+                and MENU_PATH.search(urllib.parse.urlparse(u).path) and u not in links:
+            links.append(u)
+    return links[:5]
+
+
+def menu_products(root, collection=""):
+    try:
+        home = fetch(root, tries=1)
+    except Exception:  # noqa: BLE001
+        return []
+    m = re.search(r"<title[^>]*>(.*?)</title>", home, re.S)
+    brewery = re.split(r"\s[|\u2013\u2014-]\s", text(m.group(1)))[0] if m else ""
+    out = []
+    for u in ([collection] if collection else menu_pages(root, home)):
+        out += menu_page_beers(root, u, brewery)
+    return out
+
+
 def detect_platform(root):
     """Which kind of shop is this? -> (platform, default collection) or (None, reason)."""
     if fetch_json(f"{root}/products.json?limit=1") is not None:
@@ -280,10 +389,12 @@ def detect_platform(root):
     if "squarespace" in home.lower():
         for coll in ("shop", "beer", "store", "beers"):
             items = squarespace_products(root, coll)
-            if items:
+            if items and any(ABV_RE.search(f"{b['name']} {b['abv']} {b['description']}") for b in items):
                 return "squarespace", coll
-        return None, "Squarespace site, but its shop has no products listed"
-    return None, "no product feed found (not Shopify, WooCommerce or Squarespace)"
+    for u in menu_pages(root, home):
+        if menu_page_beers(root, u):
+            return "menu", ""
+    return None, "no beer list or shop found on the site"
 
 
 def products_for(br):
@@ -292,6 +403,8 @@ def products_for(br):
         return woo_products(br["site"], br.get("collection", "")) or []
     if platform == "squarespace":
         return squarespace_products(br["site"], br.get("collection", "")) or []
+    if platform == "menu":
+        return menu_products(br["site"], br.get("collection", ""))
     return [from_shopify(p, br["site"]) for p in (shopify_products(br["site"], br.get("collection", "")) or [])]
 
 
@@ -501,15 +614,25 @@ def cmd_find(db, a):
         sources.setdefault(br["site"], dict(br))
     # "Northern Monk Faith": if the first words are a brewery we don't know yet, find its site too
     q = words(query)
-    known = {w for x in sources.values() for w in words(x.get("name") or x["site"])}
-    if q and q[0] not in known and not a.quick:
+    known = [words(x.get("name") or "") for x in sources.values()]
+    # guess the brewery's own site unless the query already starts with a brewery we know
+    if q and not any(k and q[:len(k)] == k for k in known) and not a.quick:
+        from concurrent.futures import ThreadPoolExecutor as _Pool
         for n in (3, 2, 1):
-            if len(q) > n:
-                for root, page in filter(None, (probe(u) for u in candidate_sites(" ".join(q[:n]))[:12])):
-                    plat, coll = detect_platform(root)
-                    if plat:
-                        sources.setdefault(root, {"site": root, "platform": plat, "collection": coll, "name": " ".join(q[:n]).title()})
-                        break
+            if len(q) <= n:
+                continue
+            with _Pool(16) as pool:
+                hits = [h for h in pool.map(probe, candidate_sites(" ".join(q[:n]))) if h]
+            for root, page in hits:  # only real brewery sites (title mentions beer/brewing)
+                m = re.search(r"<title[^>]*>(.*?)</title>", page, re.S)
+                title = text(m.group(1)) if m else ""
+                if not re.search(r"\b(beers?|brew\w*|ales?|taproom)\b", title, re.I) or root in sources:
+                    continue
+                plat, coll = detect_platform(root)
+                if plat:
+                    sources[root] = {"site": root, "platform": plat, "collection": coll, "name": " ".join(q[:n]).title()}
+            if any(" ".join(q[:n]).title() == x.get("name") for x in sources.values()):
+                break
     print(f"Searching {len(sources)} brewery websites for {query!r}" + (" (+ Open Food Facts)" if a.databases else "") + "...")
 
     def search(br):
@@ -518,7 +641,7 @@ def cmd_find(db, a):
         except Exception:  # noqa: BLE001  a shop being down shouldn't stop the search
             return []
         for b in items:
-            b["source_name"] = (br.get("name") or b["brewery"]) + " shop"
+            b["source_name"] = (br.get("name") or b["brewery"]) + (" website" if br.get("platform") == "menu" else " shop")
             if br.get("name") and not b["brewery"]:
                 b["brewery"] = br["name"]
         return items
@@ -530,7 +653,8 @@ def cmd_find(db, a):
             b["source_name"] = "Open Food Facts"
             items.append(b)
     scored = [(match_score(query, b), b) for b in items
-              if not NOT_A_BEER.search(b["name"]) and not re.search(r"bag.in.box|\b\d+\s*l\b|\bkeg\b|\bfirkin\b", b["style"] + " " + b["name"], re.I)]
+              if not NOT_A_BEER.search(b["name"]) and not re.search(r"bag.in.box|\b\d+\s*l\b|\bkeg\b|\bfirkin\b", b["style"] + " " + b["name"], re.I)
+              and not re.search(r"\b(wine|sangiovese|chardonnay|shiraz|merlot|pinot|riesling|sauvignon|prosecco|vintage)\b", b["name"] + " " + b["style"], re.I)]
     hits = [b for s, b in sorted(scored, key=lambda t: -t[0]) if s >= 0.6]
     seen, results = set(), []
     for b in hits:  # one row per beer, not per can size
@@ -539,6 +663,8 @@ def cmd_find(db, a):
             seen.add(k)
             results.append(b)
     results = results[: a.limit]
+    with ThreadPoolExecutor(8) as pool:  # local copies, so the hosted page can show them
+        list(pool.map(download_art, results))
     FOUND.write_text(json.dumps({"query": query, "results": results}, indent=1, ensure_ascii=False))
     PREVIEW.write_text(TEMPLATE.replace("{{FOUND}}", "").replace("{{TITLE}}", html.escape(f"Found: {query}"))
                        .replace("<title>Beer Wall</title>", "<title>Beer Search</title>")
