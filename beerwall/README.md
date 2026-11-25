@@ -18,8 +18,9 @@ python3 beerwall/beerwall.py pick 1                        # adds match 1 to the
 `find` searches the breweries you follow (including sold-out beers), the
 directory of UK brewery shops in `breweries.json` (44 breweries; add more by
 editing it), the brewery's own site if the query starts with a brewery name it
-doesn't know yet, and Open Food Facts for big brands. It shows each match with
-ABV, style, description and the link it came from, and writes `found.html` so
+doesn't know yet. Everything comes straight from brewery websites; `--databases`
+also searches Open Food Facts (off by default). It shows each match with ABV,
+style, description and the link it came from, and writes `found.html` so
 you can see the artwork and badge before adding anything. Nothing is added
 until you `pick`.
 

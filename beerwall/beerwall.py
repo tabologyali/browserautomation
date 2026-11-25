@@ -510,7 +510,7 @@ def cmd_find(db, a):
                     if plat:
                         sources.setdefault(root, {"site": root, "platform": plat, "collection": coll, "name": " ".join(q[:n]).title()})
                         break
-    print(f"Searching {len(sources)} brewery shops and Open Food Facts for {query!r}...")
+    print(f"Searching {len(sources)} brewery websites for {query!r}" + (" (+ Open Food Facts)" if a.databases else "") + "...")
 
     def search(br):
         try:
@@ -525,7 +525,7 @@ def cmd_find(db, a):
 
     with ThreadPoolExecutor(12) as pool:
         items = [b for group in pool.map(search, sources.values()) for b in group]
-    if not a.no_off:
+    if a.databases:  # off by default: brewery sources only
         for b in off_search(query):
             b["source_name"] = "Open Food Facts"
             items.append(b)
@@ -851,7 +851,8 @@ def main():
     fd.add_argument("query", help='e.g. "northern monk faith" or "church house pils"')
     fd.add_argument("--limit", type=int, default=8)
     fd.add_argument("--quick", action="store_true", help="skip guessing new brewery websites")
-    fd.add_argument("--no-off", action="store_true", help="skip Open Food Facts")
+    fd.add_argument("--databases", action="store_true",
+                    help="also search Open Food Facts (not a brewery source; off by default)")
     pk = sub.add_parser("pick", help="add beers from the last `find` by number")
     pk.add_argument("numbers", type=int, nargs="+")
     s = sub.add_parser("search", help="find a brewery's website by name and check it can be pulled")
