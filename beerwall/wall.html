@@ -14,9 +14,21 @@
   header span { color:var(--muted); font-size:clamp(12px,.9vw,20px); }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr)); gap:1.2vw; }
   .beer { display:flex; gap:1.2vw; background:var(--card); border-radius:14px; padding:1vw; min-height:0; }
-  .art { flex:0 0 clamp(96px,10vw,220px); aspect-ratio:1; max-width:100%; border-radius:10px; overflow:hidden; background:#000; }
-  .art img { max-width:100%; width:100%; height:100%; object-fit:cover; display:block; }
-  .noart { display:grid; place-items:center; height:100%; font-size:4vw; }
+  .art { flex:0 0 clamp(110px,11vw,240px); max-width:100%; align-self:flex-start; }
+  .badge { display:block; width:100%; height:auto; filter:drop-shadow(0 3px 6px rgba(0,0,0,.5)); }
+  .ring { font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif; font-weight:900; fill:#f4efe6; letter-spacing:.06em; }
+  .ring.top { font-size:17px; }
+  .ring.bot { font-size:13px; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; }
+  .tag { font-size:clamp(11px,.75vw,18px); font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+         padding:.2em .6em; border-radius:999px; border:1.5px solid var(--muted); color:var(--ink); }
+  .tag.new { background:var(--accent); border-color:var(--accent); color:#121110; }
+  .tag.gf { border-color:#7cc47f; color:#a9e0ab; }
+  .tag.low { border-color:#6fb6d9; color:#a6d6ee; }
+  .tag.strong { border-color:#e0675c; color:#f2a39b; }
+  .tag.ba { border-color:#c7955a; color:#e3bf92; }
+  .tag.collab { border-color:#b59ad9; color:#d6c4ee; }
+  .tag.vegan { border-color:#9fbf5a; color:#cde3a0; }
   .info { min-width:0; display:flex; flex-direction:column; gap:.4vw; }
   .top { display:flex; justify-content:space-between; gap:1vw; align-items:baseline; }
   h2 { font-size:clamp(18px,1.6vw,40px); line-height:1.1; text-wrap:balance; overflow-wrap:anywhere; }
@@ -30,338 +42,800 @@
   <header><h1>On Tap</h1><span>Updated 25 Nov 2026</span></header>
   <main class="grid">
     <article class="beer">
-      <div class="art"><img src="art/www.northernmonk.com_15674317898111.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Faith tap badge">
+        <defs><clipPath id="c0"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t0" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u0" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#2f7d4f"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.northernmonk.com_15674317898111.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c0)"/>
+        <text class="ring top"><textPath href="#t0" startOffset="50%" text-anchor="middle">FAITH</textPath></text>
+        <text class="ring bot"><textPath href="#u0" startOffset="50%" text-anchor="middle">5.0% · NORTHERN MONK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Faith</h2><span class="abv">5.0%</span></div>
         <div class="meta">Hazy Pale Ale · Northern Monk</div>
+        
         <div class="desc"><p>The hazy pale that started it all.</p><p>Faith Hazy Pale Ale is brewed with northern pride and bursting with bright, juicy flavour. Smooth, tropical and effortlessly drinkable, it&#x27;s the beer that defined who we are.</p><p>You&#x27;ve got to have Faith.</p><p>Tasting notes</p><p>Appearance: Dark yellow colour with moderate haze, light to medium foam and light to medium lacing.</p><p>Aroma: Tropical pineapple, light citrus and stone fruit.</p><p>Taste: Lightly sweet, gently bitter, with subtle lingering bitterness.</p><p>Mouthfeel: Light to medium body, soft carbonation and a slightly mouthwatering finish.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/manual_tsingtao-brewery-tsingtao.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Tsingtao tap badge">
+        <defs><clipPath id="c1"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t1" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u1" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#7a3f8f"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/manual_tsingtao-brewery-tsingtao.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c1)"/>
+        <text class="ring top"><textPath href="#t1" startOffset="50%" text-anchor="middle">TSINGTAO</textPath></text>
+        <text class="ring bot"><textPath href="#u1" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">4.7% · TSINGTAO BREWERY</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Tsingtao</h2><span class="abv">4.7%</span></div>
         <div class="meta">Classic Lager · Tsingtao Brewery</div>
+        
         <div class="desc"><p>Rich in heritage, bold in taste. A lager of pure class.</p><p>Brewed with malted barley, hops, yeast and pure mountain water for a crisp, refreshing beer.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_20551.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Lupu Lion (GF) tap badge">
+        <defs><clipPath id="c2"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t2" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u2" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_20551.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c2)"/>
+        <text class="ring top"><textPath href="#t2" startOffset="50%" text-anchor="middle">LUPU LION (GF)</textPath></text>
+        <text class="ring bot"><textPath href="#u2" startOffset="50%" text-anchor="middle">4.3% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Lupu Lion (GF)</h2><span class="abv">4.3%</span></div>
         <div class="meta">American Pale Ale · Brew York</div>
+        <div class="tags"><span class="tag new">New</span><span class="tag gf">GF</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Lupulin: The golden part of the hop that gives beer its bitterness, aroma and flavour.</p><p>Lupu Lion: The hippest cat in the pride, a juicy golden pale ale heavily hopped for roaring citrus notes with a totally paw-some resinous pine finish.</p><p>All of the taste, with zero gluten!</p><p>Looking for more gluten-free beer? Check out Golden Eagle</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Hops, Yeast</p><p>Vegan, Gluten Free (&lt;20ppm)</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_103090.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Hellion tap badge">
+        <defs><clipPath id="c3"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t3" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u3" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_103090.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c3)"/>
+        <text class="ring top"><textPath href="#t3" startOffset="50%" text-anchor="middle">HELLION</textPath></text>
+        <text class="ring bot"><textPath href="#u3" startOffset="50%" text-anchor="middle">4.3% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Hellion</h2><span class="abv">4.3%</span></div>
         <div class="meta">Pale Ale · Brew York</div>
+        <div class="tags"><span class="tag new">New</span><span class="tag gf">GF</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>‘You’ve Got Another Thing Comin’ if you think beer has ever tasted this good. This pale ale will have you ‘Riding On the Wind’ with Cascade, Mosaic and Citra hops. Expect a punch of citrus, tropical fruit and resinous bitterness giving you enough ‘Fever’ to raise your horns and let the ‘Metal Gods’ take you on a journey through the night.</p><p>Turn it up loud.</p><p>NOTE Launch date for this is December 1st – all stock (including the rest of your order) will be sent at this time.</p><p>Due to export laws etc we can not ship externally to UK.</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Hops, Yeast</p><p>Vegan, Gluten Free</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_92121.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="BA Chocolate Orange Empress Tonkoko tap badge">
+        <defs><clipPath id="c4"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t4" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u4" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_92121.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c4)"/>
+        <text class="ring top"><textPath href="#t4" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">BA CHOCOLATE ORANGE EMPRESS TONKOKO</textPath></text>
+        <text class="ring bot"><textPath href="#u4" startOffset="50%" text-anchor="middle">10.6% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>BA Chocolate Orange Empress Tonkoko</h2><span class="abv">10.6%</span></div>
         <div class="meta">BA Chocolate Orange Imperial Milk Stout · Brew York</div>
+        <div class="tags"><span class="tag new">New</span><span class="tag strong">Strong</span><span class="tag ba">Barrel aged</span></div>
         <div class="desc"><p>A decadent imperial milk stout, luxuriously full-bodied and smooth, layered with rich chocolate orange zest, aromatic vanilla, and creamy Tonka bean. A year of careful barrel aging adds warm oak, subtle caramel, and gentle spirit notes, enhancing its complexity. The</p><p>interplay of bright citrus, dessert-like chocolate and aromatic spices creates a sophisticated, indulgent profile.</p><p>Each sip delivers a lingering, velvety finish where barrel-aged depth meets aromatic richness, making this stout bold and truly luxurious drinking experience.</p><p>Ingredients</p><p>Water, Barley, Lactose (Milk), Coconut, Vanilla, Tonka, Natural Flavourings, Hops, Yeast.</p><p>May contain Celery, Mustard or Sesame.</p><p>Vegetarian</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98210.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Blood Moon tap badge">
+        <defs><clipPath id="c5"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t5" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u5" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_98210.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c5)"/>
+        <text class="ring top"><textPath href="#t5" startOffset="50%" text-anchor="middle">BLOOD MOON</textPath></text>
+        <text class="ring bot"><textPath href="#u5" startOffset="50%" text-anchor="middle">5.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Blood Moon</h2><span class="abv">5.5%</span></div>
         <div class="meta">Red IPA · Brew York</div>
+        <div class="tags"><span class="tag collab">Collab</span></div>
         <div class="desc"><p>A collaboration between Brew York and Abbeydale Brewery, inspired by one of Abbeydale’s classic beers, Moonshine.</p><p>This deep-red IPA puts a darker twist on its pale predecessor, combining rich caramel and toasted malt with layers of citrusy, resinous hops and a firm, satisfying bitterness.</p><p>Named after the eerie phenomenon that turns the moon a striking shade of red, Blood Moon is a bold evolution of Moonshine — darker, deeper and ready to shine when the sun goes down.</p><p>Ingredients</p><p>Water, Barley, Hops, Yeast</p><p>Vegetarian</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_92122.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="BA Bourbon Empress Tonkoko tap badge">
+        <defs><clipPath id="c6"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t6" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u6" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_92122.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c6)"/>
+        <text class="ring top"><textPath href="#t6" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">BA BOURBON EMPRESS TONKOKO</textPath></text>
+        <text class="ring bot"><textPath href="#u6" startOffset="50%" text-anchor="middle">10.6% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>BA Bourbon Empress Tonkoko</h2><span class="abv">10.6%</span></div>
         <div class="meta">BA Imperial Bourbon Milk Stout · Brew York</div>
+        <div class="tags"><span class="tag strong">Strong</span><span class="tag ba">Barrel aged</span></div>
         <div class="desc"><p>A luxurious imperial milk stout, velvety &amp; full-bodied, infused with aromatic vanilla, creamy Tonka bean, and toasted coconut. A year of St. Augustine bourbon barrel ageing adds rich oak, warm caramel, and subtle spirit notes, deepening its complexity. Chocolate &amp; caramel undertones mingle with the aromatic spices, creating a decadent, dessert-like profile.</p><p>Smooth yet powerful, each sip delivers a lingering, warming finish where barrel-aged richness meets tropical sweetness &amp; aromatic depth, making this stout an indulgent, memorable experience.</p><p>Ingredients</p><p>Water, Barley, Lactose (Milk), Coconut, Coffee, Vanilla, Tonka, Natural Flavourings, Hops, Yeast.</p><p>May contain Celery, Mustard or Sesame.</p><p>Vegetarian</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98202.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Vivienne Westcoast tap badge">
+        <defs><clipPath id="c7"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t7" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u7" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_98202.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c7)"/>
+        <text class="ring top"><textPath href="#t7" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">VIVIENNE WESTCOAST</textPath></text>
+        <text class="ring bot"><textPath href="#u7" startOffset="50%" text-anchor="middle">7.2% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Vivienne Westcoast</h2><span class="abv">7.2%</span></div>
         <div class="meta">Modern West Coast IPA · Brew York</div>
+        <div class="tags"><span class="tag collab">Collab</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>To celebrate ten years of challenging convention, Brew York’s 10th Birthday Series brings together ten international collaborators, each paired with a cultural figure whose work helped reshape creativity, craft, and culture.</p><p>Introducing Vivienne Westcoast, brewed with Elusive Brewing and Fierce Beer, inspired by English fashion designer and businesswoman Dame Vivienne Westwood, whose emergence in the 1970s punk fashion scene still influences pop culture today.</p><p>A Modern West Coast IPA, Vivienne Westcoast is packed with tropical, citrus, and white grape, cutting through the intense hops and delivering a delightfully smooth mouthfeel. This bold brew will have you feeling punk in no time.</p><p>Ingredients</p><p>Water, Barley, Wheat, Hops, Yeast.</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_99971.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Champale Supernova tap badge">
+        <defs><clipPath id="c8"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t8" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u8" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_99971.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c8)"/>
+        <text class="ring top"><textPath href="#t8" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">CHAMPALE SUPERNOVA</textPath></text>
+        <text class="ring bot"><textPath href="#u8" startOffset="50%" text-anchor="middle">4.8% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Champale Supernova</h2><span class="abv">4.8%</span></div>
         <div class="meta">NEIPA · Brew York</div>
+        <div class="tags"><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Some might say that this hazy NEIPA is like driving headlong into a wonderwall of hops. Amarillo, Motueka, Citra and Mosaic bring huge waves of juicy orange, lime, grapefruit, mango and tropical fruit, with a soft, hazy body and a smooth, pillowy finish. Soft, hazy and dangerously drinkable, this is a proper rock ’n’ roll NEIPA.</p><p>Slide away from the ordinary, stop crying your heart out and let the good times roll.</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_88389.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Dreams of Brew York 2026 tap badge">
+        <defs><clipPath id="c9"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t9" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u9" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_88389.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c9)"/>
+        <text class="ring top"><textPath href="#t9" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">DREAMS OF BREW YORK 2026</textPath></text>
+        <text class="ring bot"><textPath href="#u9" startOffset="50%" text-anchor="middle">5.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Dreams of Brew York 2026</h2><span class="abv">5.5%</span></div>
         <div class="meta">LEMON &amp; RASPBERRY POSSET TART PASTRY SOUR · Brew York</div>
+        
         <div class="desc"><p>Dreams of Brew York captures the bright, refreshing flavours of a classic lemon and raspberry posset. Tart raspberry meets vibrant citrus before mellowing into a silky, dessert-like finish reminiscent of buttery pastry and sweet cream.</p><p>Balancing zesty sharpness with delicate sweetness, this fruited sour is light, refreshing and packed with festive flavour. A perfect palate cleanser between rich Christmas dinners or simply a vibrant toast to the holiday season.</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Lactose (Milk), Maltodextrin, Raspberries, Lemons, Natural Flavourings, Vanilla, Hops, Yeast</p><p>Vegetarian</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_88390.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Nightmare of Brew York 2026 tap badge">
+        <defs><clipPath id="c10"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t10" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u10" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_88390.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c10)"/>
+        <text class="ring top"><textPath href="#t10" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">NIGHTMARE OF BREW YORK 2026</textPath></text>
+        <text class="ring bot"><textPath href="#u10" startOffset="50%" text-anchor="middle">7.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Nightmare of Brew York 2026</h2><span class="abv">7.5%</span></div>
         <div class="meta">Walnut Whip Imperial Milk Stout · Brew York</div>
+        
         <div class="desc"><p>For those who prefer their festive treats on the darker side, Nightmare of Brew York is an indulgent Imperial Milk Stout inspired by the iconic Walnut Whip. Layers of rich chocolate and roasted malt combine with creamy vanilla and delicate walnut, delivering a full-bodied stout with a velvety smooth finish.</p><p>Bold, decadent and wonderfully warming, it’s a luxurious winter sipper that captures the nostalgia of Christmas chocolates in every unforgettable mouthful.</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Lactose (Milk), Maltodextrin, Wheat, Hops, Natural Flavourings, Vanilla, Yeast</p><p>Vegetarian</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_88387.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Fairytale of Brew York 2026 tap badge">
+        <defs><clipPath id="c11"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t11" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u11" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_88387.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c11)"/>
+        <text class="ring top"><textPath href="#t11" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">FAIRYTALE OF BREW YORK 2026</textPath></text>
+        <text class="ring bot"><textPath href="#u11" startOffset="50%" text-anchor="middle">4.9% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Fairytale of Brew York 2026</h2><span class="abv">4.9%</span></div>
         <div class="meta">Chocolate Snowball Milk Stout · Brew York</div>
+        
         <div class="desc"><p>Celebrate the festive season with Fairytale of Brew York, a decadent chocolate, coconut &amp; marshmallow snowball milk stout inspired by the classic Christmas confection. Rich chocolate malt lays the foundation for toasted coconut, while fluffy marshmallow sweetness creates a smooth, creamy finish.</p><p>Luxuriously indulgent yet beautifully balanced, it’s like unwrapping a festive favourite by the fireside. Whether shared with friends or enjoyed as a cosy winter treat, this is Christmas in a glass</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Lactose (Milk), Hops, Natural Flavourings, Vanilla, Yeast, Maltodextrin</p><p>Vegetarian</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_81291.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Hop Sessions 016 tap badge">
+        <defs><clipPath id="c12"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t12" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u12" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_81291.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c12)"/>
+        <text class="ring top"><textPath href="#t12" startOffset="50%" text-anchor="middle">HOP SESSIONS 016</textPath></text>
+        <text class="ring bot"><textPath href="#u12" startOffset="50%" text-anchor="middle">4.7% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Hop Sessions 016</h2><span class="abv">4.7%</span></div>
         <div class="meta">Mosaic &amp; Summit Pale · Brew York</div>
+        <div class="tags"><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Hop Sessions 016 brings together Mosaic and Summit hops in a hazy pale ale bursting with juicy citrus, ripe tropical fruit and a subtle resinous edge. Soft, hazy and seriously sessionable, it’s packed with hop character without weighing you down. Expect layers of vibrant flavour, a smooth mouthfeel and a refreshing finish that keeps you coming back for another sip.</p><p>So, let us know, which Hop Session is your favourite? #BYHopSessions</p><p>Ingredients</p><p>Water, Barley, Wheat, Oats, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_100944.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Giant Coney tap badge">
+        <defs><clipPath id="c13"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t13" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u13" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_100944.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c13)"/>
+        <text class="ring top"><textPath href="#t13" startOffset="50%" text-anchor="middle">GIANT CONEY</textPath></text>
+        <text class="ring bot"><textPath href="#u13" startOffset="50%" text-anchor="middle">7.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Giant Coney</h2><span class="abv">7.5%</span></div>
         <div class="meta">Hazy DIPA · Brew York</div>
+        <div class="tags"><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Giant Coney takes everything you love about our award-winning Coney and supersizes it. Named after the old meaning of coney – rabbit – and inspired by York’s iconic Coney Street, first recorded around 1150 as Cuningstrete or the King’s Street, this is the bigger, bolder member of the family.</p><p>Brewed as a Hazy Double IPA, Giant Coney is packed with generous additions of Citra, Mosaic and Simcoe hops, delivering an explosion of juicy citrus, ripe mango and luscious stone fruit flavours. A smooth, pillowy body supports the intensified hop character, while a restrained bitterness keeps every sip dangerously drinkable.</p><p>Ingredients</p><p>Water, Barley, Wheat, Oats Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_100699.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Endless Pursuit tap badge">
+        <defs><clipPath id="c14"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t14" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u14" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_100699.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c14)"/>
+        <text class="ring top"><textPath href="#t14" startOffset="50%" text-anchor="middle">ENDLESS PURSUIT</textPath></text>
+        <text class="ring bot"><textPath href="#u14" startOffset="50%" text-anchor="middle">4.4% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Endless Pursuit</h2><span class="abv">4.4%</span></div>
         <div class="meta">Italian Pilsner · Brew York</div>
+        <div class="tags"><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Introducing Endless Pursuit, brewed with Brewfist — crisp, refined and built for precision, this pilsner is a masterclass in balance and restraint. Layered with delicate floral hops, gentle herbal bitterness and a clean, dry finish, it delivers elegance in every sip. Inspired by Ferrari’s relentless pursuit of performance and design perfection, Endless Pursuit is a celebration of Italian craftsmanship — fast, focused, and flawlessly executed.</p><p>Ingredients</p><p>Water, Barley, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_99975.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Hazy Hazy Nights tap badge">
+        <defs><clipPath id="c15"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t15" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u15" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_99975.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c15)"/>
+        <text class="ring top"><textPath href="#t15" startOffset="50%" text-anchor="middle">HAZY HAZY NIGHTS</textPath></text>
+        <text class="ring bot"><textPath href="#u15" startOffset="50%" text-anchor="middle">5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Hazy Hazy Nights</h2><span class="abv">5%</span></div>
         <div class="meta">Hazy Pale · Brew York</div>
+        <div class="tags"><span class="tag collab">Collab</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>We’ve teamed up with our great mates at Amundsen Brewery to pay tribute to our favourite glam rock bands! Our hazy pale is generously</p><p>hopped with Citra and Idaho 7, bringing strong fruit flavours of citrus, mango and stone fruits</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98208.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Citrus Cinema tap badge">
+        <defs><clipPath id="c16"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t16" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u16" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_98208.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c16)"/>
+        <text class="ring top"><textPath href="#t16" startOffset="50%" text-anchor="middle">CITRUS CINEMA</textPath></text>
+        <text class="ring bot"><textPath href="#u16" startOffset="50%" text-anchor="middle">4.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Citrus Cinema</h2><span class="abv">4.5%</span></div>
         <div class="meta">Orange &amp; Lemon Fruited Pale · Brew York</div>
+        <div class="tags"><span class="tag collab">Collab</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>To celebrate ten years of challenging convention, Brew York’s 10th Birthday Series brings together ten international collaborators, each paired with a cultural figure whose work helped reshape creativity, craft, and culture.</p><p>Introducing Citrus Cinema, brewed in collaboration with OSO Brew Co. — an orange and lemon fruited pale ale inspired by by iconic Spanish film director and screenwriter Pedro Almodóvar. Bursting with bright citrus character, Citrus Cinema delivers layers of juicy orange, sharp lemon zest, and a crisp, refreshing finish worthy of the big screen.</p><p>Ingredients</p><p>Water, Barley, Wheat, Maltodextrin, Orange, Lemon, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98204.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Haze of Thunder tap badge">
+        <defs><clipPath id="c17"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t17" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u17" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_98204.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c17)"/>
+        <text class="ring top"><textPath href="#t17" startOffset="50%" text-anchor="middle">HAZE OF THUNDER</textPath></text>
+        <text class="ring bot"><textPath href="#u17" startOffset="50%" text-anchor="middle">4.2% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Haze of Thunder</h2><span class="abv">4.2%</span></div>
         <div class="meta">Hazy Pale · Brew York</div>
+        <div class="tags"><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Engines roar. Glasses pour. In a world where haze rules the track, one pale ale dares to ride the edge. Citra ignites a blast of citrus, Mosaic drifts in with waves of tropical intensity, Idaho 7 pushes juicy stone fruit into overdrive and Loral cuts through with a flash of floral spice.</p><p>It’s smooth, it’s hazy, it’s dangerously drinkable – built for speed, tuned for balance. When the pressure climbs and the flavour hits full throttle, there’s no turning back. This isn’t just a beer – it’s a high-speed collision of juice, aroma, and attitude.</p><p>Buckle up!</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Hops, Yeast.</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98049.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="10th Birthday BA Imperial Stout tap badge">
+        <defs><clipPath id="c18"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t18" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u18" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_98049.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c18)"/>
+        <text class="ring top"><textPath href="#t18" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">10TH BIRTHDAY BA IMPERIAL STOUT</textPath></text>
+        <text class="ring bot"><textPath href="#u18" startOffset="50%" text-anchor="middle">11.0% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>10th Birthday BA Imperial Stout</h2><span class="abv">11.0%</span></div>
         <div class="meta">Rum &amp; Bourbon BA Imperial Stout · Brew York</div>
+        <div class="tags"><span class="tag strong">Strong</span><span class="tag ba">Barrel aged</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Limited edition rum and bourbon barrel–aged imperial stout. Deep and velvety, it layers dark chocolate and roasted espresso with molasses sweetness from rum barrels and warm vanilla, oak, and caramel from bourbon casks. Bold yet balanced, it finishes smooth with a lingering warmth worthy of the celebration.</p><p>Ingredients</p><p>Water, Barley, Hops, Yeast.</p><p>Vegan. Store Cold</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98051.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="10th Birthday Sauternes BA Golden Sour tap badge">
+        <defs><clipPath id="c19"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t19" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u19" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_98051.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c19)"/>
+        <text class="ring top"><textPath href="#t19" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">10TH BIRTHDAY SAUTERNES BA GOLDEN SOUR</textPath></text>
+        <text class="ring bot"><textPath href="#u19" startOffset="50%" text-anchor="middle">8.0% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>10th Birthday Sauternes BA Golden Sour</h2><span class="abv">8.0%</span></div>
         <div class="meta">Sauternes BA Golden Sour · Brew York</div>
+        <div class="tags"><span class="tag strong">Strong</span><span class="tag ba">Barrel aged</span></div>
         <div class="desc"><p>Limited edition golden sour aged in Sauternes barrels. Bright and elegant, it balances lively acidity with notes of honeyed stone fruit, citrus, and delicate oak from the sweet wine casks. Crisp, complex and beautifully refined, it finishes dry with a soft, lingering tartness.</p><p>Ingredients</p><p>Water, Barley, Oats, Buckwheat, Honey, Honeycomb, Hops, Yeast.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98050.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="10th Birthday BA Barley Wine tap badge">
+        <defs><clipPath id="c20"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t20" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u20" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_98050.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c20)"/>
+        <text class="ring top"><textPath href="#t20" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">10TH BIRTHDAY BA BARLEY WINE</textPath></text>
+        <text class="ring bot"><textPath href="#u20" startOffset="50%" text-anchor="middle">13.0% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>10th Birthday BA Barley Wine</h2><span class="abv">13.0%</span></div>
         <div class="meta">Brandy &amp; Bourbon BA Barley Wine · Brew York</div>
+        <div class="tags"><span class="tag strong">Strong</span><span class="tag ba">Barrel aged</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Limited edition barley wine aged in orange brandy and bourbon barrels. Rich and full-bodied, it brings together notes of candied orange, toffee and dried fruit with layers of vanilla, oak and warm bourbon spice. Smooth and complex, it finishes with a gentle warmth worthy of the occasion.</p><p>Ingredients</p><p>Water, Barley, Hops, Yeast.</p><p>Vegan</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_97571.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Velvet Starfall tap badge">
+        <defs><clipPath id="c21"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t21" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u21" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_97571.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c21)"/>
+        <text class="ring top"><textPath href="#t21" startOffset="50%" text-anchor="middle">VELVET STARFALL</textPath></text>
+        <text class="ring bot"><textPath href="#u21" startOffset="50%" text-anchor="middle">11.0% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Velvet Starfall</h2><span class="abv">11.0%</span></div>
         <div class="meta">Pasteis De Nata Imperial Stout · Brew York</div>
+        <div class="tags"><span class="tag strong">Strong</span><span class="tag collab">Collab</span></div>
         <div class="desc"><p>To celebrate ten years of challenging convention, Brew York’s 10th Birthday Series brings together ten international collaborators, each paired with a cultural figure whose work helped reshape creativity, craft, and culture.</p><p>Introducing Velvet Starfall, brewed in collaboration with Frontaal Brewing Company — a stout inspired by the visionary Dutch artist Vincent van Gogh. In the Netherlands, Van Gogh challenged artistic convention through</p><p>bold colour, emotion, and movement, shaping a style that would influence generations. Rich and indulgent, this stout layers smooth vanilla, creamy sweetness, and warming spice over a deep, velvety body.</p><p>Ingredients</p><p>Water, Barley, Oats, Lactose (Milk), Maltodextrin, Vanilla, Cinnamon, Lemon, Hops, Yeast</p><p>Vegetarian</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_96583.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Poisoned Chalice tap badge">
+        <defs><clipPath id="c22"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t22" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u22" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_96583.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c22)"/>
+        <text class="ring top"><textPath href="#t22" startOffset="50%" text-anchor="middle">POISONED CHALICE</textPath></text>
+        <text class="ring bot"><textPath href="#u22" startOffset="50%" text-anchor="middle">3.9% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Poisoned Chalice</h2><span class="abv">3.9%</span></div>
         <div class="meta">Best Bitter · Brew York</div>
+        <div class="tags"><span class="tag collab">Collab</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Introducing Poisoned Chalice, brewed in collaboration with York Minster to mark the 800th anniversary of William of York. Inspired by the legend of William’s alleged poisoning from a chalice during Mass, this commemorative best bitter offers a far more enjoyable ending. A crisp, balanced traditional best bitter, it combines toasty malt, gentle caramel sweetness and Brew York’s hallmark hoppy character.</p><p>Part of the Minster’s 2026 Crafting a Legacy celebrations, Poisoned Chalice honours York’s rich artisan heritage — from medieval craftsmen to modern craft brewers. A beer rooted in history, brewed for today</p><p>Ingredients</p><p>Water, Barley, Wheat, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_88282.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Time Travelling Taxi tap badge">
+        <defs><clipPath id="c23"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t23" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u23" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_88282.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c23)"/>
+        <text class="ring top"><textPath href="#t23" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">TIME TRAVELLING TAXI</textPath></text>
+        <text class="ring bot"><textPath href="#u23" startOffset="50%" text-anchor="middle">4.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Time Travelling Taxi</h2><span class="abv">4.5%</span></div>
         <div class="meta">DDH Hazy Pale Ale · Brew York</div>
+        <div class="tags"><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Anyone experiencing the time jumping taxi that arrives a minute after the map indicated it to be ten minutes away (usually after ordering a beer)?</p><p>Or maybe you recall the time distorting taxi that started two minutes away yet doesn’t arrive for twenty minutes! Maybe it was better when our taxis were always ‘just around the corner’!</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_68317.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Osprey tap badge">
+        <defs><clipPath id="c24"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t24" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u24" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_68317.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c24)"/>
+        <text class="ring top"><textPath href="#t24" startOffset="50%" text-anchor="middle">OSPREY</textPath></text>
+        <text class="ring bot"><textPath href="#u24" startOffset="50%" text-anchor="middle">4.1% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Osprey</h2><span class="abv">4.1%</span></div>
         <div class="meta">Lager · Brew York</div>
+        <div class="tags"><span class="tag gf">GF</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Inspired by the freezing heights and frosty surroundings of the Rocky Mountains, Osprey is an American lager best served ice cold!</p><p>Our lager is clean and light with a crisp finish, which is balanced with a spicy, herbal, and complex aroma.</p><p>Certified as Gluten Free (less than 20ppm)..</p><p>Ingredients</p><p>Water, Barley, Maize, Rice, Hops, Yeast</p><p>Vegan, Gluten Free</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_62936.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Coney tap badge">
+        <defs><clipPath id="c25"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t25" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u25" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_62936.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c25)"/>
+        <text class="ring top"><textPath href="#t25" startOffset="50%" text-anchor="middle">CONEY</textPath></text>
+        <text class="ring bot"><textPath href="#u25" startOffset="50%" text-anchor="middle">4.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Coney</h2><span class="abv">4.5%</span></div>
         <div class="meta">Hazy Session IPA · Brew York</div>
+        <div class="tags"><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Coney means ‘rabbit’, but this beer is also a nod to Coney Street – a street in York city centre, first recorded around 1150 as ‘Cuningstrete’ – the King’s Street. Today it’s one of the city’s most iconic and vibrant areas to visit.</p><p>This Coney is our classic Hazy Session IPA, generously hopped with Citra, Mosaic and Simcoe, bringing strong fruit flavours of citrus, mango and stone fruits. SIBA regional gold award-winning and national silver award winning pale ale</p><p>Ingredients</p><p>Water, Barley, Oats, Wheat, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_62938.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Loris tap badge">
+        <defs><clipPath id="c26"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t26" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u26" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_62938.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c26)"/>
+        <text class="ring top"><textPath href="#t26" startOffset="50%" text-anchor="middle">LORIS</textPath></text>
+        <text class="ring bot"><textPath href="#u26" startOffset="50%" text-anchor="middle">0.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Loris</h2><span class="abv">0.5%</span></div>
         <div class="meta">Low Alcohol Pale Ale · Brew York</div>
+        <div class="tags"><span class="tag low">Alcohol free</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Loris is an easy-drinking, juice and hazy low alcohol pale ale. We use El Dorado, Citra and Mosaic hops to create an intense tropical and citrus fruit aroma, which is followed by a crisp, refreshing bitterness which doesn’t linger. It’s a tasty drop at just 0.5%! Read more about this beer.</p><p>Ingredients</p><p>Water, Barley, Wheat, Oats, Hops, Yeast</p><p>Vegan</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p><p>Nutritional Information</p><p>Average quantity per 100ml | per serving</p><p>Energy – 76.5kJ (18.5kcal) | 336.6kJ (81.4kcal)</p><p>Protein – 0.12g | 0.5g</p><p>Total Fat – 0.2g | 0.9g</p><p>– Saturated Fat – 0.15g | 0.7g</p><p>– Trans Fat – &lt;0.01g | &lt;0.01g</p><p>Carbohydrates – 3.1g | 13.6g</p><p>– Sugars – &lt;0.1g | 0.4g</p><p>Salt – &lt;0.01g | &lt;0.01g</p><p>Sodium – &lt;3mg | 13.2mg</p><p>Servings per pack (1) Serving Size (440ml)</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_57130.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Gweilo Neon Jungle IPA tap badge">
+        <defs><clipPath id="c27"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t27" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u27" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_57130.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c27)"/>
+        <text class="ring top"><textPath href="#t27" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">GWEILO NEON JUNGLE IPA</textPath></text>
+        <text class="ring bot"><textPath href="#u27" startOffset="50%" text-anchor="middle">5.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Gweilo Neon Jungle IPA</h2><span class="abv">5.5%</span></div>
         <div class="meta">Neon Jungle IPA · Brew York</div>
+        
         <div class="desc"><p>Neon Jungle IPA brings you bright, tropical flavours from Hong Kong. Wheat and Oats help thicken the hazy base to which we add Idaho 7 and Citra in both whirlpool and dry hop. Aromas of tangerine and pineapple lead into flavours of papaya and passion fruit.</p><p>This brew is an attack on the senses!</p><p>ABV 5.5% • IBU 11</p><p>Allergens – Malted Barley</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_20464.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Time Travelling Taxi tap badge">
+        <defs><clipPath id="c28"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t28" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u28" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_20464.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c28)"/>
+        <text class="ring top"><textPath href="#t28" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">TIME TRAVELLING TAXI</textPath></text>
+        <text class="ring bot"><textPath href="#u28" startOffset="50%" text-anchor="middle">5.4% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Time Travelling Taxi</h2><span class="abv">5.4%</span></div>
         <div class="meta">DDH Pale · Brew York</div>
+        
         <div class="desc"><p>Anyone experiencing the time jumping taxi that arrives a minute after the map indicated it to be ten minutes away (usually after ordering a beer)?</p><p>Or maybe you recall the time distorting taxi that started two minutes away yet doesn’t arrive for twenty minutes! Maybe it was better when our taxis were always ‘just around the corner’!</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_20466.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Tonkoko tap badge">
+        <defs><clipPath id="c29"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t29" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u29" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_20466.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c29)"/>
+        <text class="ring top"><textPath href="#t29" startOffset="50%" text-anchor="middle">TONKOKO</textPath></text>
+        <text class="ring bot"><textPath href="#u29" startOffset="50%" text-anchor="middle">4.3% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Tonkoko</h2><span class="abv">4.3%</span></div>
         <div class="meta">Milk Stout · Brew York</div>
+        
         <div class="desc"><p>Tonka beans, hand-toasted coconut, Madagascan vanilla and Belgian sourced cacao nibs combine to make this one silky smooth and indulgent milk stout. Many have called it liquid Bounty! We built a custom infusion vessel to make this beer; we hope you think it was worth it!</p><p>Ingredients</p><p>Water, Barley, Lactose (Milk), Coconut, Cacao Nibs, Hops, Yeast, Vanilla, Tonka Beans, Natural Flavourings.</p><p>Vegetarian</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_20611.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Golden Eagle (GF) tap badge">
+        <defs><clipPath id="c30"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t30" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u30" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#b8322a"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/brewyork.co.uk_20611.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c30)"/>
+        <text class="ring top"><textPath href="#t30" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">GOLDEN EAGLE (GF)</textPath></text>
+        <text class="ring bot"><textPath href="#u30" startOffset="50%" text-anchor="middle">4.5% · BREW YORK</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Golden Eagle (GF)</h2><span class="abv">4.5%</span></div>
         <div class="meta">Pilsner · Brew York</div>
+        <div class="tags"><span class="tag gf">GF</span><span class="tag vegan">Vegan</span></div>
         <div class="desc"><p>Golden Eagle, inspired by the most noble of the American birds of prey is a classic Czech style pilsner made with super soft water and hops for a refreshing and crisp finish with just a hint of spice.</p><p>Looking for more gluten-free beer? Check out Lupu Lion.</p><p>Ingredients</p><p>Water, Barley, Hops, Yeast</p><p>Vegan, Gluten Free</p><p>Flavour Profile</p><p>Hops</p><p>Fruit</p><p>Sweet</p><p>Mouthfeel</p><p>Bitter</p><p>Malt</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11228832923985.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="I Like To Play tap badge">
+        <defs><clipPath id="c31"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t31" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u31" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_11228832923985.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c31)"/>
+        <text class="ring top"><textPath href="#t31" startOffset="50%" text-anchor="middle">I LIKE TO PLAY</textPath></text>
+        <text class="ring bot"><textPath href="#u31" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">6.5% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>I Like To Play</h2><span class="abv">6.5%</span></div>
         <div class="meta">NEIPA · Lost Cause Brewing Co</div>
+        
         <div class="desc"><p>NEIPA w/ Citra 3 ways - T90, Lupomax and Spectrum. It’s no secret that Colin loves citra, so we’ve had a play with this one. Layers of Citra on Citra on Citra, dry hopped at different stages with different types, to amplify the hop flavour. Huge citrus, tropical fruit and sticky resinous flavours throughout.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11153797153105.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Got A Train To Catch tap badge">
+        <defs><clipPath id="c32"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t32" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u32" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_11153797153105.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c32)"/>
+        <text class="ring top"><textPath href="#t32" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">GOT A TRAIN TO CATCH</textPath></text>
+        <text class="ring bot"><textPath href="#u32" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">6.5% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Got A Train To Catch</h2><span class="abv">6.5%</span></div>
         <div class="meta">DDH IPA · Lost Cause Brewing Co</div>
+        
         <div class="desc"><p>Soft and pillowy, with peach and zesty tangerine on the nose, followed by juicy tropical fruit and a little tickle of blackcurrant from Audacia, Idaho 7 and Luminosa hops, with a sweet malty finish.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11153825595729.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Stay In Your Lane tap badge">
+        <defs><clipPath id="c33"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t33" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u33" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_11153825595729.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c33)"/>
+        <text class="ring top"><textPath href="#t33" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">STAY IN YOUR LANE</textPath></text>
+        <text class="ring bot"><textPath href="#u33" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">4.8% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Stay In Your Lane</h2><span class="abv">4.8%</span></div>
         <div class="meta">GF West Coast Pale · Lost Cause Brewing Co</div>
+        <div class="tags"><span class="tag gf">GF</span></div>
         <div class="desc"><p>Brewed with Cascade for that classic West Coast bitterness, then dry hopped with Enigma &amp; Strata for juicy melon, passionfruit and plenty of piney, resinous character. A modern take on a classic West Coast pale. [GLUTEN FREE]</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11174875922769.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Don&#x27;t Make Up Stories tap badge">
+        <defs><clipPath id="c34"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t34" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u34" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_11174875922769.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c34)"/>
+        <text class="ring top"><textPath href="#t34" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">DON&#x27;T MAKE UP STORIES</textPath></text>
+        <text class="ring bot"><textPath href="#u34" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">6.5% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Don&#x27;t Make Up Stories</h2><span class="abv">6.5%</span></div>
         <div class="meta">Blueberry, Peach &amp; Vanilla Sour · Lost Cause Brewing Co</div>
+        
         <div class="desc"><p>Juicy, fruity, tangy and tartly sour. Packed with plump, jammy blueberries, rounded out with juicy peach and finished with a vanilla sweetness. Bright, tangy and fruity AF.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_9471764889937.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Kastenbräu tap badge">
+        <defs><clipPath id="c35"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t35" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u35" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_9471764889937.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c35)"/>
+        <text class="ring top"><textPath href="#t35" startOffset="50%" text-anchor="middle">KASTENBRÄU</textPath></text>
+        <text class="ring bot"><textPath href="#u35" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">4.8% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Kastenbräu</h2><span class="abv">4.8%</span></div>
         <div class="meta">Munich Style Helles Lager · Lost Cause Brewing Co</div>
+        
         <div class="desc"><p>CRISP | REFRESHING | MALTY</p><p>Brewed to Bavarian standards, Kastenbräu has been laying low in horizontal lagering tanks for an authentic clean crisp flavour and smooth drinkability. Light and refreshing with a subtle malt sweetness.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933459386705.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Herding Chickens tap badge">
+        <defs><clipPath id="c36"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t36" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u36" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_10933459386705.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c36)"/>
+        <text class="ring top"><textPath href="#t36" startOffset="50%" text-anchor="middle">HERDING CHICKENS</textPath></text>
+        <text class="ring bot"><textPath href="#u36" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">3.4% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Herding Chickens</h2><span class="abv">3.4%</span></div>
         <div class="meta">Table Beer · Lost Cause Brewing Co</div>
+        <div class="tags"><span class="tag low">Low ABV</span></div>
         <div class="desc"><p>Light, crisp, fragrant and fruity, this is a summer beer made for sunshine and relaxed times drinking in a field somewhere, pref. with a tent up and a BBQ cookin&#x27;. Notes of lemon zest, soft pear drop and a light floral finish keep it bright, dry and refreshing.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933468070225.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Hocus Pocus Soft Focus tap badge">
+        <defs><clipPath id="c37"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t37" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u37" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_10933468070225.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c37)"/>
+        <text class="ring top"><textPath href="#t37" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">HOCUS POCUS SOFT FOCUS</textPath></text>
+        <text class="ring bot"><textPath href="#u37" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">3.0% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Hocus Pocus Soft Focus</h2><span class="abv">3.0%</span></div>
         <div class="meta">Apricot Pale Ale · Lost Cause Brewing Co</div>
+        <div class="tags"><span class="tag low">Low ABV</span></div>
         <div class="desc"><p>A soft and fuzzy pale ale made for some seasonal supping. Light and fruity, this thirst quenching little number is packed with apricot puree for loads of soft stone fruit character, backed by bright hits of Centennial bringing citrus zest and a slight floral edge.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933470331217.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Wuzza Wuzza tap badge">
+        <defs><clipPath id="c38"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t38" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u38" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_10933470331217.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c38)"/>
+        <text class="ring top"><textPath href="#t38" startOffset="50%" text-anchor="middle">WUZZA WUZZA</textPath></text>
+        <text class="ring bot"><textPath href="#u38" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">4.8% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Wuzza Wuzza</h2><span class="abv">4.8%</span></div>
         <div class="meta">DDH Pale Ale · Lost Cause Brewing Co</div>
+        
         <div class="desc"><p>An easy-drinking hazy pale with soft peach and citrus, gentle tropical notes of papaya, pineapple and nectarine, and a finish that snaps with pink lemonade brightness and a subtle dank edge. With Luminosa, Strata and Nectaron.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_9099268260177.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Lully tap badge">
+        <defs><clipPath id="c39"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t39" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u39" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_9099268260177.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c39)"/>
+        <text class="ring top"><textPath href="#t39" startOffset="50%" text-anchor="middle">LULLY</textPath></text>
+        <text class="ring bot"><textPath href="#u39" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">4% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Lully</h2><span class="abv">4%</span></div>
         <div class="meta">Citra Pale Ale · Lost Cause Brewing Co</div>
+        
         <div class="desc"><p>MELON | MANGO | GUAVA</p><p>No frills needed for this delightful pale ale. Lully, our only core beer tastes like a citrus dream. Hopped with 100% Citra, this easy-sipping, mellow hazy pale ale brings tons of those sherbet citrussy aromas with a big beefy mouthfeel that punches well above its weight. It’s juicy, fruity, and easy drinking - everything you’d want from a session pale ale.</p><p>Hops: Citra, Citra, Citra</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10805924856145.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="Nonsense Nonsense tap badge">
+        <defs><clipPath id="c40"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t40" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u40" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_10805924856145.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c40)"/>
+        <text class="ring top"><textPath href="#t40" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">NONSENSE NONSENSE</textPath></text>
+        <text class="ring bot"><textPath href="#u40" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">8% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>Nonsense Nonsense</h2><span class="abv">8%</span></div>
         <div class="meta">DIPA · Lost Cause Brewing Co</div>
+        <div class="tags"><span class="tag strong">Strong</span></div>
         <div class="desc"><p>A double take on our core beer, Lully. All citra hops give out bright and zesty citrus, ripe mango on the nose with peach and a touch of pine. Full, hazy and pillowy with juicy tropical fruit and lemen sherbert flavours.</p></div>
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10723955900753.jpg" alt=""></div>
+      <div class="art"><svg class="badge" viewBox="0 0 200 200" role="img" aria-label="In The Club Style tap badge">
+        <defs><clipPath id="c41"><circle cx="100" cy="100" r="68"/></clipPath>
+          <path id="t41" d="M 24 100 A 76 76 0 0 1 176 100"/>
+          <path id="u41" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
+        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
+        <circle cx="100" cy="100" r="96" fill="#1f6f8b"/>
+        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
+        <image href="art/www.lostcausebrewing.co.uk_10723955900753.jpg" x="32" y="32" width="136" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#c41)"/>
+        <text class="ring top"><textPath href="#t41" startOffset="50%" text-anchor="middle" textLength="232" lengthAdjust="spacingAndGlyphs">IN THE CLUB STYLE</textPath></text>
+        <text class="ring bot"><textPath href="#u41" startOffset="50%" text-anchor="middle" textLength="210" lengthAdjust="spacingAndGlyphs">5.2% · LOST CAUSE BREWING CO</textPath></text>
+      </svg></div>
       <div class="info">
         <div class="top"><h2>In The Club Style</h2><span class="abv">5.2%</span></div>
         <div class="meta">Standard Stout · Lost Cause Brewing Co</div>
+        
         <div class="desc"><p>This smooth and easy drinking number packs cocoa hints, rich and creamy espresso and the rounded fruitiness from hedgerow berries in a perfectly balanced harmony of flavour and finesse.</p></div>
       </div>
     </article>
