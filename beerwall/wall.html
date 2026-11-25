@@ -1,22 +1,25 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>On Tap</title>
+<title>Beer Wall</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <style>
-  :root { --bg:#111; --card:#1c1c1c; --ink:#f4efe6; --muted:#b5ab9a; --accent:#f2a516; }
+  /* Bar-board look, deliberately dark only: label art on charcoal cards, amber for ABV and style */
+  :root { --bg:#121110; --card:#1d1b19; --ink:#f4efe6; --muted:#b5ab9a; --accent:#f2a516; color-scheme:dark; }
   * { box-sizing:border-box; margin:0; }
-  body { background:var(--bg); color:var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; padding:2vw; }
-  header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1.5vw; }
+  body { background:var(--bg); color:var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         padding-block:2vw; padding-left:max(16px, 2vw, env(safe-area-inset-left, 0px)); padding-right:max(16px, 2vw, env(safe-area-inset-right, 0px)); }
+  header { display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:space-between; align-items:baseline; margin-bottom:1.5vw; }
   header h1 { font-size:clamp(28px,3.2vw,72px); letter-spacing:.04em; text-transform:uppercase; }
   header span { color:var(--muted); font-size:clamp(12px,.9vw,20px); }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr)); gap:1.2vw; }
   .beer { display:flex; gap:1.2vw; background:var(--card); border-radius:14px; padding:1vw; min-height:0; }
-  .art { flex:0 0 clamp(100px,10vw,220px); aspect-ratio:1; border-radius:10px; overflow:hidden; background:#000; }
-  .art img { width:100%; height:100%; object-fit:cover; display:block; }
+  .art { flex:0 0 clamp(96px,10vw,220px); aspect-ratio:1; max-width:100%; border-radius:10px; overflow:hidden; background:#000; }
+  .art img { max-width:100%; width:100%; height:100%; object-fit:cover; display:block; }
   .noart { display:grid; place-items:center; height:100%; font-size:4vw; }
   .info { min-width:0; display:flex; flex-direction:column; gap:.4vw; }
   .top { display:flex; justify-content:space-between; gap:1vw; align-items:baseline; }
-  h2 { font-size:clamp(18px,1.6vw,40px); line-height:1.1; }
+  h2 { font-size:clamp(18px,1.6vw,40px); line-height:1.1; text-wrap:balance; overflow-wrap:anywhere; }
   .abv { color:var(--accent); font-weight:800; font-size:clamp(18px,1.5vw,38px); white-space:nowrap; }
   .meta { color:var(--accent); font-size:clamp(12px,.95vw,22px); text-transform:uppercase; letter-spacing:.05em; }
   .desc { color:var(--muted); font-size:clamp(12px,.85vw,20px); line-height:1.35; overflow:hidden;
@@ -27,7 +30,7 @@
   <header><h1>On Tap</h1><span>Updated 25 Nov 2026</span></header>
   <main class="grid">
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_20551.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_20551.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Lupu Lion (GF)</h2><span class="abv">4.3%</span></div>
         <div class="meta">American Pale Ale · Brew York</div>
@@ -35,7 +38,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_103090.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_103090.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Hellion</h2><span class="abv">4.3%</span></div>
         <div class="meta">Pale Ale · Brew York</div>
@@ -43,7 +46,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_92121.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_92121.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>BA Chocolate Orange Empress Tonkoko</h2><span class="abv">10.6%</span></div>
         <div class="meta">BA Chocolate Orange Imperial Milk Stout · Brew York</div>
@@ -51,7 +54,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98210.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_98210.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Blood Moon</h2><span class="abv">5.5%</span></div>
         <div class="meta">Red IPA · Brew York</div>
@@ -59,7 +62,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_92122.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_92122.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>BA Bourbon Empress Tonkoko</h2><span class="abv">10.6%</span></div>
         <div class="meta">BA Imperial Bourbon Milk Stout · Brew York</div>
@@ -67,7 +70,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98202.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_98202.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Vivienne Westcoast</h2><span class="abv">7.2%</span></div>
         <div class="meta">Modern West Coast IPA · Brew York</div>
@@ -75,7 +78,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_99971.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_99971.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Champale Supernova</h2><span class="abv">4.8%</span></div>
         <div class="meta">NEIPA · Brew York</div>
@@ -83,7 +86,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_88389.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_88389.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Dreams of Brew York 2026</h2><span class="abv">5.5%</span></div>
         <div class="meta">LEMON &amp; RASPBERRY POSSET TART PASTRY SOUR · Brew York</div>
@@ -91,7 +94,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_88390.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_88390.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Nightmare of Brew York 2026</h2><span class="abv">7.5%</span></div>
         <div class="meta">Walnut Whip Imperial Milk Stout · Brew York</div>
@@ -99,7 +102,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_88387.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_88387.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Fairytale of Brew York 2026</h2><span class="abv">4.9%</span></div>
         <div class="meta">Chocolate Snowball Milk Stout · Brew York</div>
@@ -107,7 +110,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_81291.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_81291.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Hop Sessions 016</h2><span class="abv">4.7%</span></div>
         <div class="meta">Mosaic &amp; Summit Pale · Brew York</div>
@@ -115,7 +118,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_100944.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_100944.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Giant Coney</h2><span class="abv">7.5%</span></div>
         <div class="meta">Hazy DIPA · Brew York</div>
@@ -123,7 +126,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_100699.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_100699.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Endless Pursuit</h2><span class="abv">4.4%</span></div>
         <div class="meta">Italian Pilsner · Brew York</div>
@@ -139,7 +142,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98208.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_98208.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Citrus Cinema</h2><span class="abv">4.5%</span></div>
         <div class="meta">Orange &amp; Lemon Fruited Pale · Brew York</div>
@@ -147,7 +150,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98204.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_98204.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Haze of Thunder</h2><span class="abv">4.2%</span></div>
         <div class="meta">Hazy Pale · Brew York</div>
@@ -155,7 +158,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98049.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_98049.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>10th Birthday BA Imperial Stout</h2><span class="abv">11.0%</span></div>
         <div class="meta">Rum &amp; Bourbon BA Imperial Stout · Brew York</div>
@@ -163,7 +166,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98051.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_98051.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>10th Birthday Sauternes BA Golden Sour</h2><span class="abv">8.0%</span></div>
         <div class="meta">Sauternes BA Golden Sour · Brew York</div>
@@ -171,7 +174,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_98050.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_98050.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>10th Birthday BA Barley Wine</h2><span class="abv">13.0%</span></div>
         <div class="meta">Brandy &amp; Bourbon BA Barley Wine · Brew York</div>
@@ -179,7 +182,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_97571.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_97571.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Velvet Starfall</h2><span class="abv">11.0%</span></div>
         <div class="meta">Pasteis De Nata Imperial Stout · Brew York</div>
@@ -187,7 +190,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_96583.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_96583.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Poisoned Chalice</h2><span class="abv">3.9%</span></div>
         <div class="meta">Best Bitter · Brew York</div>
@@ -203,7 +206,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_68317.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_68317.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Osprey</h2><span class="abv">4.1%</span></div>
         <div class="meta">Lager · Brew York</div>
@@ -235,7 +238,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_20464.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_20464.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Time Travelling Taxi</h2><span class="abv">5.4%</span></div>
         <div class="meta">DDH Pale · Brew York</div>
@@ -243,7 +246,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_20466.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_20466.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Tonkoko</h2><span class="abv">4.3%</span></div>
         <div class="meta">Milk Stout · Brew York</div>
@@ -251,7 +254,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/brewyork.co.uk_20611.png" alt=""></div>
+      <div class="art"><img src="art/brewyork.co.uk_20611.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Golden Eagle (GF)</h2><span class="abv">4.5%</span></div>
         <div class="meta">Pilsner · Brew York</div>
@@ -275,7 +278,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11153825595729.png" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_11153825595729.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Stay In Your Lane</h2><span class="abv">4.8%</span></div>
         <div class="meta">GF West Coast Pale · Lost Cause Brewing Co</div>
@@ -291,7 +294,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_9471764889937.png" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_9471764889937.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Kastenbräu</h2><span class="abv">4.8%</span></div>
         <div class="meta">Munich Style Helles Lager · Lost Cause Brewing Co</div>
@@ -299,7 +302,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933459386705.png" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933459386705.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Herding Chickens</h2><span class="abv">3.4%</span></div>
         <div class="meta">Table Beer · Lost Cause Brewing Co</div>
@@ -307,7 +310,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933468070225.png" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933468070225.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Hocus Pocus Soft Focus</h2><span class="abv">3.0%</span></div>
         <div class="meta">Apricot Pale Ale · Lost Cause Brewing Co</div>
@@ -315,7 +318,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933470331217.png" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10933470331217.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Wuzza Wuzza</h2><span class="abv">4.8%</span></div>
         <div class="meta">DDH Pale Ale · Lost Cause Brewing Co</div>
@@ -323,7 +326,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_9099268260177.png" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_9099268260177.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Lully</h2><span class="abv">4%</span></div>
         <div class="meta">Citra Pale Ale · Lost Cause Brewing Co</div>
@@ -331,7 +334,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10805924856145.png" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10805924856145.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>Nonsense Nonsense</h2><span class="abv">8%</span></div>
         <div class="meta">DIPA · Lost Cause Brewing Co</div>
@@ -339,7 +342,7 @@
       </div>
     </article>
     <article class="beer">
-      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10723955900753.png" alt=""></div>
+      <div class="art"><img src="art/www.lostcausebrewing.co.uk_10723955900753.jpg" alt=""></div>
       <div class="info">
         <div class="top"><h2>In The Club Style</h2><span class="abv">5.2%</span></div>
         <div class="meta">Standard Stout · Lost Cause Brewing Co</div>

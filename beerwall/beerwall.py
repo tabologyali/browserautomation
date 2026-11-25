@@ -361,6 +361,31 @@ def from_page(url):
 
 # ---------------------------------------------------------------- art
 
+ART_SIZE = 600  # px; plenty for a TV card, keeps the wall light
+
+
+def shrink(data):
+    """Resize to ART_SIZE and save as JPEG if Pillow is installed; otherwise keep the original."""
+    try:
+        import io
+        from PIL import Image
+    except ImportError:
+        return data, None
+    try:
+        im = Image.open(io.BytesIO(data))
+        im.thumbnail((ART_SIZE, ART_SIZE))
+        if im.mode in ("RGBA", "LA", "P"):
+            im = im.convert("RGBA")
+            bg = Image.new("RGB", im.size, (0, 0, 0))
+            bg.paste(im, mask=im.split()[-1])
+            im = bg
+        out = io.BytesIO()
+        im.convert("RGB").save(out, "JPEG", quality=85, optimize=True)
+        return out.getvalue(), ".jpg"
+    except Exception:  # noqa: BLE001  odd formats: keep as is
+        return data, None
+
+
 def download_art(beer):
     url = beer.get("art_url") or ""
     if not url:
@@ -368,16 +393,23 @@ def download_art(beer):
         return
     if url.startswith("//"):
         url = "https:" + url
+    if "cdn.shopify.com" in url:  # Shopify resizes on request
+        url += ("&" if "?" in url else "?") + f"width={ART_SIZE}"
     ART.mkdir(exist_ok=True)
-    ext = Path(urllib.parse.urlparse(url).path).suffix.lower() or ".jpg"
-    dest = ART / (re.sub(r"[^\w.-]", "_", beer["id"]) + ext)
-    if not dest.exists():
-        try:
-            dest.write_bytes(fetch(url, binary=True))
-        except Exception as e:  # noqa: BLE001
-            print(f"  couldn't download art for {beer['name']}: {e}", file=sys.stderr)
-            beer["art"] = ""
-            return
+    stem = re.sub(r"[^\w.-]", "_", beer["id"])
+    existing = next(ART.glob(stem + ".*"), None)
+    if existing:
+        beer["art"] = f"art/{existing.name}"
+        return
+    try:
+        data = fetch(url, binary=True)
+    except Exception as e:  # noqa: BLE001
+        print(f"  couldn't download art for {beer['name']}: {e}", file=sys.stderr)
+        beer["art"] = ""
+        return
+    data, ext = shrink(data)
+    dest = ART / (stem + (ext or Path(urllib.parse.urlparse(url).path).suffix.lower() or ".jpg"))
+    dest.write_bytes(data)
     beer["art"] = f"art/{dest.name}"
 
 
@@ -481,6 +513,15 @@ def cmd_list(db, a):
     print(f"{len(db['beers'])} beer(s); following: " + (", ".join(x["site"] for x in db["breweries"]) or "none"))
 
 
+def cmd_refresh_art(db, a):
+    shutil.rmtree(ART, ignore_errors=True)
+    for b in db["beers"]:
+        if b.get("art_url"):
+            download_art(b)
+    save(db)
+    cmd_build(db, a)
+
+
 def cmd_build(db, a=None):
     if getattr(a, "title", None):
         db["title"] = a.title
@@ -513,22 +554,25 @@ def cmd_build(db, a=None):
 TEMPLATE = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{TITLE}}</title>
+<title>Beer Wall</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <style>
-  :root { --bg:#111; --card:#1c1c1c; --ink:#f4efe6; --muted:#b5ab9a; --accent:#f2a516; }
+  /* Bar-board look, deliberately dark only: label art on charcoal cards, amber for ABV and style */
+  :root { --bg:#121110; --card:#1d1b19; --ink:#f4efe6; --muted:#b5ab9a; --accent:#f2a516; color-scheme:dark; }
   * { box-sizing:border-box; margin:0; }
-  body { background:var(--bg); color:var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; padding:2vw; }
-  header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1.5vw; }
+  body { background:var(--bg); color:var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         padding-block:2vw; padding-left:max(16px, 2vw, env(safe-area-inset-left, 0px)); padding-right:max(16px, 2vw, env(safe-area-inset-right, 0px)); }
+  header { display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:space-between; align-items:baseline; margin-bottom:1.5vw; }
   header h1 { font-size:clamp(28px,3.2vw,72px); letter-spacing:.04em; text-transform:uppercase; }
   header span { color:var(--muted); font-size:clamp(12px,.9vw,20px); }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr)); gap:1.2vw; }
   .beer { display:flex; gap:1.2vw; background:var(--card); border-radius:14px; padding:1vw; min-height:0; }
-  .art { flex:0 0 clamp(100px,10vw,220px); aspect-ratio:1; border-radius:10px; overflow:hidden; background:#000; }
-  .art img { width:100%; height:100%; object-fit:cover; display:block; }
+  .art { flex:0 0 clamp(96px,10vw,220px); aspect-ratio:1; max-width:100%; border-radius:10px; overflow:hidden; background:#000; }
+  .art img { max-width:100%; width:100%; height:100%; object-fit:cover; display:block; }
   .noart { display:grid; place-items:center; height:100%; font-size:4vw; }
   .info { min-width:0; display:flex; flex-direction:column; gap:.4vw; }
   .top { display:flex; justify-content:space-between; gap:1vw; align-items:baseline; }
-  h2 { font-size:clamp(18px,1.6vw,40px); line-height:1.1; }
+  h2 { font-size:clamp(18px,1.6vw,40px); line-height:1.1; text-wrap:balance; overflow-wrap:anywhere; }
   .abv { color:var(--accent); font-weight:800; font-size:clamp(18px,1.5vw,38px); white-space:nowrap; }
   .meta { color:var(--accent); font-size:clamp(12px,.95vw,22px); text-transform:uppercase; letter-spacing:.05em; }
   .desc { color:var(--muted); font-size:clamp(12px,.85vw,20px); line-height:1.35; overflow:hidden;
@@ -568,12 +612,13 @@ def main():
     r = sub.add_parser("remove", help="take a beer off the wall (name)")
     r.add_argument("beer")
     sub.add_parser("list")
+    sub.add_parser("refresh-art", help="re-download all artwork (smaller files)")
     b = sub.add_parser("build", help="re-render wall.html / beers.csv")
     b.add_argument("--title", help="heading shown on the wall")
     a = p.parse_args()
     db = load()
     {"search": cmd_search, "follow": cmd_follow, "update": cmd_update, "add": cmd_add, "add-manual": cmd_add_manual,
-     "remove": cmd_remove, "list": cmd_list, "build": cmd_build}[a.cmd](db, a)
+     "remove": cmd_remove, "refresh-art": cmd_refresh_art, "list": cmd_list, "build": cmd_build}[a.cmd](db, a)
 
 
 if __name__ == "__main__":
