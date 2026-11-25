@@ -42,7 +42,8 @@ ABV_RE = re.compile(r"(?<![\d.])(\d{1,2}(?:\.\d{1,2})?)\s*%")
 # Products in a beer collection that aren't a single beer.
 NOT_A_BEER = re.compile(r"\b(mixed|gift|voucher|bundle|box|case of|cases?|selection|t-?shirt|hoodie|glass|tankard|"
                         r"merch|tote|cap|hat|beanie|poster|print|sauce|pack|set|subscription|credit|advent|calendar|hamper|tasting|tour|"
-                        r"ticket|admission|early bird|experience|launch|event|gin|rum|vodka|whisky|whiskey|\d+cl)\b", re.I)
+                        r"ticket|admission|early bird|experience|launch|event|gin|rum|vodka|whisky|whiskey|\d+cl|keychains?|keyrings?|tray|"
+                        r"sticker|pin|badges?|opener|coaster|lanyard|patch|magnet|socks|shirt|tee|jacket|crewneck|snapback|mug)\b", re.I)
 PROMO_RE = re.compile(r"£|basket|special deal|free (delivery|shipping)|discount code|add to cart|^\[.*\]$", re.I)
 SIZE_RE = re.compile(r"^\d+\s*(ml|cl|l|litre|pint|oz)\b|^(can|bottle|keg|cask)$", re.I)
 
@@ -576,9 +577,10 @@ def match_score(query, beer):
     q = words(query)
     if not q:
         return 0
+    brewery = set(words(beer["brewery"])) - STOP_WORDS
     hay = set(words(f"{beer['brewery']} {beer['name']} {beer['style']}"))
-    name = set(words(beer["name"]))
-    key = [w for w in q if w not in QUERY_STOP] or q
+    name = set(words(beer["name"])) - (brewery if not set(words(beer["name"])) <= brewery else set())
+    key = [w for w in q if w not in QUERY_STOP and w not in brewery] or [w for w in q if w not in QUERY_STOP] or q
     # a key word must be in the beer's name, unless the key words name the brewery and another word names the beer
     if not any(w in name for w in key) and not (all(w in hay for w in key) and any(w in name for w in q)):
         return 0
@@ -606,6 +608,70 @@ def off_search(query):
     return out
 
 
+DETAIL_PATH = re.compile(r"/(beers?|our-beers?|the-beers?|range)/([a-z0-9-]+)/?$", re.I)
+
+
+def detail_page(root, url, brewery):
+    """One beer's own page: name, style, ABV, description and picture."""
+    try:
+        h = fetch(url, tries=1)
+    except Exception:  # noqa: BLE001
+        return None
+
+    def meta(prop):
+        m = re.search(rf'<meta[^>]+(?:property|name)="{prop}"[^>]+content="([^"]*)"', h) or \
+            re.search(rf'<meta[^>]+content="([^"]*)"[^>]+(?:property|name)="{prop}"', h)
+        return html.unescape(m.group(1)).strip() if m else ""
+    name = re.split(r"\s[|\u2013\u2014-]\s", meta("og:title") or "")[0].strip()
+    lines = [v for k, v in page_lines(h) if k != "img"]
+    try:
+        i = next(n for n, v in enumerate(lines) if v.strip().lower() == name.lower())
+    except StopIteration:
+        i = 0
+    block = lines[i:i + 40]
+    abv = ""
+    for n, v in enumerate(block):
+        m = ABV_RE.search(v) if "abv" in v.lower() or (n and "abv" in block[n - 1].lower()) else None
+        if m:
+            abv = m.group(1) + "%"
+            break
+    style = next((v for v in block[1:4] if len(v) < 45 and not ABV_RE.search(v) and v.lower() not in ("abv", "style")), "")
+    desc = max([v for v in block if len(v) > 60] or [meta("og:description")], key=len)
+    if not name or not abv:
+        return None
+    return {"id": f"{urllib.parse.urlparse(root).netloc}:{urllib.parse.urlparse(url).path.strip('/').split('/')[-1]}",
+            "name": name, "brewery": brewery, "style": style, "abv": abv, "description": desc,
+            "art_url": meta("og:image"), "link": url, "source_date": "", "in_stock": True}
+
+
+def detail_page_beers(br, q):
+    """For a brewery named in the query, open its own per-beer pages whose address matches the beer's name."""
+    root = br["site"]
+    bwords = set(words(br.get("name") or ""))
+    want = [w for w in q if w not in bwords and w not in QUERY_STOP]
+    if not want:
+        return []
+    pages = [root]
+    try:
+        home = fetch(root, tries=1)
+    except Exception:  # noqa: BLE001
+        return []
+    links = set()
+    for page in [home] + [fetch(u, tries=1) for u in menu_pages(root, home)[:2]]:
+        for href in re.findall(r'href="([^"#?]+)"', page):
+            u = urllib.parse.urljoin(root + "/", href)
+            m = DETAIL_PATH.search(urllib.parse.urlparse(u).path)
+            if m and urllib.parse.urlparse(u).netloc.removeprefix("www.") == urllib.parse.urlparse(root).netloc.removeprefix("www."):
+                links.add(u)
+    hits = [u for u in links if all(w in DETAIL_PATH.search(urllib.parse.urlparse(u).path).group(2).split("-") for w in want)]
+    hits = sorted(hits, key=len)[:4]
+    beers = [detail_page(root, u, br.get("name") or "") for u in hits]
+    for b in beers:
+        if b:
+            b["source_name"] = (br.get("name") or "") + " website"
+    return [b for b in beers if b]
+
+
 def cmd_find(db, a):
     from concurrent.futures import ThreadPoolExecutor
     query = a.query
@@ -631,6 +697,13 @@ def cmd_find(db, a):
                 plat, coll = detect_platform(root)
                 if plat:
                     sources[root] = {"site": root, "platform": plat, "collection": coll, "name": " ".join(q[:n]).title()}
+                    try:  # remember it, so later searches without the brewery's name still look there
+                        directory = json.loads(DIRECTORY.read_text()) if DIRECTORY.exists() else []
+                        if root not in {d["site"] for d in directory}:
+                            directory.append(sources[root])
+                            DIRECTORY.write_text(json.dumps(sorted(directory, key=lambda d: d["name"].lower()), indent=1, ensure_ascii=False))
+                    except (OSError, ValueError):
+                        pass
             if any(" ".join(q[:n]).title() == x.get("name") for x in sources.values()):
                 break
     print(f"Searching {len(sources)} brewery websites for {query!r}" + (" (+ Open Food Facts)" if a.databases else "") + "...")
@@ -648,6 +721,10 @@ def cmd_find(db, a):
 
     with ThreadPoolExecutor(12) as pool:
         items = [b for group in pool.map(search, sources.values()) for b in group]
+        # breweries named in the query: also look for a page per beer (e.g. /beer/daisy-cutter/)
+        named = [x for x in sources.values() if x.get("name") and words(x["name"]) and q[:len(words(x["name"]))] == words(x["name"])]
+        for group in pool.map(lambda br: detail_page_beers(br, q), named):
+            items += group
     if a.databases:  # off by default: brewery sources only
         for b in off_search(query):
             b["source_name"] = "Open Food Facts"
@@ -667,7 +744,7 @@ def cmd_find(db, a):
         list(pool.map(download_art, results))
     FOUND.write_text(json.dumps({"query": query, "results": results}, indent=1, ensure_ascii=False))
     PREVIEW.write_text(TEMPLATE.replace("{{FOUND}}", "").replace("{{TITLE}}", html.escape(f"Found: {query}"))
-                       .replace("<title>Beer Wall</title>", "<title>Beer Search</title>")
+                       .replace("<title>AliTappd</title>", "<title>Beer Search</title>")
                        .replace("{{CARDS}}", render_cards(results, numbered=True) if results else
                                 "<p>No matches. Try fewer words, or the brewery's name.</p>")
                        .replace("Updated {{UPDATED}}", f"{len(results)} match{'es' if len(results) != 1 else ''} \u00b7 nothing added yet"))
@@ -916,7 +993,7 @@ def cmd_build(db, a=None):
 TEMPLATE = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Beer Wall</title>
+<title>AliTappd</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
   /* Bar-board look, deliberately dark only: label art on charcoal cards, amber for ABV and style */

@@ -102,6 +102,12 @@
   "collection": ""
  },
  {
+  "site": "https://halfacrebeer.com",
+  "platform": "woocommerce",
+  "collection": "",
+  "name": "Half Acre"
+ },
+ {
   "name": "Harbour",
   "site": "https://www.harbourbrewing.com",
   "platform": "shopify",
