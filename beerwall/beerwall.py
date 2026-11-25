@@ -810,42 +810,6 @@ def cmd_refresh_art(db, a):
     cmd_build(db, a)
 
 
-RING_COLOURS = ["#b8322a", "#1f6f8b", "#2f7d4f", "#7a3f8f", "#c06a12", "#3b4a9c", "#8a6d1c", "#a23a6b"]
-
-
-RING_BY_BREWERY = {}
-
-
-def ring_colour(brewery):
-    """Each brewery on the wall gets its own badge ring colour."""
-    if brewery not in RING_BY_BREWERY:
-        RING_BY_BREWERY[brewery] = RING_COLOURS[len(RING_BY_BREWERY) % len(RING_COLOURS)]
-    return RING_BY_BREWERY[brewery]
-
-
-def tap_badge(b, i):
-    """Round tap badge (SVG): the beer's art in the middle, name over the top, ABV and brewery underneath."""
-    name = html.escape(b["name"].upper())
-    bottom = html.escape(" \u00b7 ".join(x for x in (b["abv"], b["brewery"].upper()) if x))
-    fit_top = ' textLength="232" lengthAdjust="spacingAndGlyphs"' if len(b["name"]) > 16 else ""
-    fit_bot = ' textLength="210" lengthAdjust="spacingAndGlyphs"' if len(bottom) > 22 else ""
-    src = b.get("art") or b.get("art_url") or ""
-    img = (f'<image href="{html.escape(src)}" x="32" y="32" width="136" height="136" '
-           f'preserveAspectRatio="xMidYMid slice" clip-path="url(#c{i})"/>') if src else \
-        '<text x="100" y="114" text-anchor="middle" font-size="40">\U0001F37A</text>'
-    return f"""<svg class="badge" viewBox="0 0 200 200" role="img" aria-label="{html.escape(b['name'])} tap badge">
-        <defs><clipPath id="c{i}"><circle cx="100" cy="100" r="68"/></clipPath>
-          <path id="t{i}" d="M 24 100 A 76 76 0 0 1 176 100"/>
-          <path id="u{i}" d="M 11 100 A 89 89 0 0 0 189 100"/></defs>
-        <circle cx="100" cy="100" r="99" fill="#f4efe6"/>
-        <circle cx="100" cy="100" r="96" fill="{ring_colour(b['brewery'])}"/>
-        <circle cx="100" cy="100" r="70" fill="#000" stroke="#f4efe6" stroke-width="2.5"/>
-        {img}
-        <text class="ring top"><textPath href="#t{i}" startOffset="50%" text-anchor="middle"{fit_top}>{name}</textPath></text>
-        <text class="ring bot"><textPath href="#u{i}" startOffset="50%" text-anchor="middle"{fit_bot}>{bottom}</textPath></text>
-      </svg>"""
-
-
 def info_tags(b):
     """Short tags for the card: GF, alcohol free / low, strong, barrel aged, collab, new."""
     hay = " ".join((b["name"], b["style"], b["description"])).lower()
@@ -878,11 +842,10 @@ def info_tags(b):
 
 
 def render_cards(beers, numbered=False, on_wall=()):
-    for br in sorted({b["brewery"] for b in beers}):  # same colour each rebuild
-        ring_colour(br)
     cards = []
     for i, b in enumerate(beers):
-        art = tap_badge(b, i)
+        src = b.get("art") or b.get("art_url") or ""
+        art = f'<img src="{html.escape(src)}" alt="" loading="lazy">' if src else '<div class="noart">\U0001F37A</div>'
         tags = info_tags(b)
         desc = "".join(f"<p>{html.escape(p)}</p>" for p in b["description"].split("\n") if p.strip())
         meta = " \u00b7 ".join(html.escape(x) for x in (b["style"], b["brewery"]) if x)
@@ -917,7 +880,7 @@ def export_for_artifact(dest):
     h = re.sub(r'(?is)<!doctype html>\s*<html[^>]*>\s*<head>\s*<meta charset="utf-8">\s*<meta name="viewport"[^>]*>\s*', "", h)
     h = h.replace("</head>", "").replace("<body>", "").replace("</body></html>", "").replace("</body>\n</html>", "")
     (dest / "wall.html").write_text(h)
-    for f in set(re.findall(r'href="(art/[^"]+)"', h)):
+    for f in set(re.findall(r'(?:href|src)="(art/[^"]+)"', h)):
         shutil.copyfile(HERE / f, dest / f)
     print(f"Artifact copy in {dest}")
 
@@ -966,11 +929,9 @@ TEMPLATE = """<!doctype html>
   header span { color:var(--muted); font-size:clamp(12px,.9vw,20px); }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr)); gap:1.2vw; }
   .beer { display:flex; gap:1.2vw; background:var(--card); border-radius:14px; padding:1vw; min-height:0; }
-  .art { flex:0 0 clamp(110px,11vw,240px); max-width:100%; align-self:flex-start; }
-  .badge { display:block; width:100%; height:auto; filter:drop-shadow(0 3px 6px rgba(0,0,0,.5)); }
-  .ring { font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif; font-weight:900; fill:#f4efe6; letter-spacing:.06em; }
-  .ring.top { font-size:17px; }
-  .ring.bot { font-size:13px; }
+  .art { flex:0 0 clamp(110px,11vw,240px); aspect-ratio:1; max-width:100%; align-self:flex-start; border-radius:10px; overflow:hidden; background:#000; }
+  .art img { width:100%; height:100%; object-fit:cover; display:block; }
+  .noart { display:grid; place-items:center; height:100%; font-size:40px; }
   .tags { display:flex; flex-wrap:wrap; gap:6px; }
   .tag { font-size:clamp(11px,.75vw,18px); font-weight:700; text-transform:uppercase; letter-spacing:.06em;
          padding:.2em .6em; border-radius:999px; border:1.5px solid var(--muted); color:var(--ink); }
