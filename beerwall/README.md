@@ -8,7 +8,15 @@ It reads the public product feed behind the brewery's online shop. Supported
 shop types: **Shopify**, **WooCommerce** and **Squarespace**. Only in-stock beers
 are added; merch, spirits, event tickets, mixed packs and gift sets are skipped.
 
-## Find any beer, check it, then add it
+## On the hosted wall page
+
+When you (the owner, or an editor) open the wall on claude.ai, it shows an
+**Add a beer** box plus **Add to wall** / **Remove** buttons. Each sends a
+request to Claude as a comment; Claude searches brewery websites, posts the
+results at the top of the page for you to check, and only adds a beer when
+you tap **Add to wall**. Anyone else (a TV, a shared link) sees the plain wall.
+
+## Find any beer, check it, then add it (command line)
 
 ```sh
 python3 beerwall/beerwall.py find "northern monk faith"   # lists matches + writes found.html preview

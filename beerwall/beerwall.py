@@ -540,7 +540,7 @@ def cmd_find(db, a):
             results.append(b)
     results = results[: a.limit]
     FOUND.write_text(json.dumps({"query": query, "results": results}, indent=1, ensure_ascii=False))
-    PREVIEW.write_text(TEMPLATE.replace("{{TITLE}}", html.escape(f"Found: {query}"))
+    PREVIEW.write_text(TEMPLATE.replace("{{FOUND}}", "").replace("{{TITLE}}", html.escape(f"Found: {query}"))
                        .replace("<title>Beer Wall</title>", "<title>Beer Search</title>")
                        .replace("{{CARDS}}", render_cards(results, numbered=True) if results else
                                 "<p>No matches. Try fewer words, or the brewery's name.</p>")
@@ -751,7 +751,7 @@ def info_tags(b):
     return "".join(f'<span class="tag {c}">{t}</span>' for t, c in tags)
 
 
-def render_cards(beers, numbered=False):
+def render_cards(beers, numbered=False, on_wall=()):
     for br in sorted({b["brewery"] for b in beers}):  # same colour each rebuild
         ring_colour(br)
     cards = []
@@ -763,6 +763,12 @@ def render_cards(beers, numbered=False):
         num = f'<span class="num">{i + 1}</span>' if numbered else ""
         src = (f'<div class="src">Source: {html.escape(b.get("source_name", ""))} \u2014 '
                f'<a href="{html.escape(b["link"])}">{html.escape(b["link"])}</a></div>') if numbered and b.get("link") else ""
+        if numbered:
+            done = (b["name"].lower(), b["brewery"].lower()) in on_wall
+            btn = ('<span class="added">On the wall \u2713</span>' if done else
+                   f'<button type="button" class="act pick" data-n="{i + 1}" data-name="{html.escape(b["name"])}">Add to wall</button>')
+        else:
+            btn = f'<button type="button" class="act remove" data-name="{html.escape(b["name"])}">Remove</button>'
         cards.append(f"""
     <article class="beer">
       <div class="art">{art}</div>
@@ -771,9 +777,23 @@ def render_cards(beers, numbered=False):
         <div class="meta">{meta}</div>
         {f'<div class="tags">{tags}</div>' if tags else ''}
         <div class="desc">{desc}</div>{src}
+        <div class="acts">{btn}</div>
       </div>
     </article>""")
     return "".join(cards)
+
+
+def export_for_artifact(dest):
+    """Copy of the wall for claude.ai hosting: page body only (the host adds <head>), plus the art it uses."""
+    dest = Path(dest)
+    (dest / "art").mkdir(parents=True, exist_ok=True)
+    h = WALL.read_text()
+    h = re.sub(r'(?is)<!doctype html>\s*<html[^>]*>\s*<head>\s*<meta charset="utf-8">\s*<meta name="viewport"[^>]*>\s*', "", h)
+    h = h.replace("</head>", "").replace("<body>", "").replace("</body></html>", "").replace("</body>\n</html>", "")
+    (dest / "wall.html").write_text(h)
+    for f in set(re.findall(r'href="(art/[^"]+)"', h)):
+        shutil.copyfile(HERE / f, dest / f)
+    print(f"Artifact copy in {dest}")
 
 
 def cmd_build(db, a=None):
@@ -781,7 +801,17 @@ def cmd_build(db, a=None):
         db["title"] = a.title
         save(db)
     cards = render_cards(db["beers"])
-    WALL.write_text(TEMPLATE.replace("{{TITLE}}", html.escape(db["title"]))
+    found = ""
+    if FOUND.exists():
+        f = json.loads(FOUND.read_text())
+        on_wall = {(b["name"].lower(), b["brewery"].lower()) for b in db["beers"]}
+        res = f.get("results", [])
+        found = (f'<section class="found" id="found"><h2 class="found-h">Results for \u201c{html.escape(f.get("query", ""))}\u201d '
+                 f'<span>{len(res)} found on brewery websites \u00b7 nothing is added until you tap Add</span></h2>'
+                 f'<div class="grid">{render_cards(res, numbered=True, on_wall=on_wall)}</div>'
+                 + ("" if res else "<p>No matches on brewery websites. Try the brewery name, or fewer words.</p>")
+                 + "</section>")
+    WALL.write_text(TEMPLATE.replace("{{FOUND}}", found).replace("{{TITLE}}", html.escape(db["title"]))
                     .replace("{{CARDS}}", cards)
                     .replace("{{UPDATED}}", dt.date.today().strftime("%d %b %Y")))
     with CSV_OUT.open("w", newline="") as f:
@@ -790,6 +820,8 @@ def cmd_build(db, a=None):
         for b in db["beers"]:
             w.writerow([b["name"], b["brewery"], b["style"], b["abv"], b["description"], b.get("art", ""), b.get("link", "")])
     print(f"Wrote {WALL.relative_to(HERE.parent)} and {CSV_OUT.relative_to(HERE.parent)} ({len(db['beers'])} beers)")
+    if getattr(a, "artifact", None):
+        export_for_artifact(a.artifact)
 
 
 TEMPLATE = """<!doctype html>
@@ -822,12 +854,32 @@ TEMPLATE = """<!doctype html>
   .tag.strong { border-color:#e0675c; color:#f2a39b; }
   .tag.ba { border-color:#c7955a; color:#e3bf92; }
   .tag.collab { border-color:#b59ad9; color:#d6c4ee; }
+  .finder { display:none; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:1.5vw; }
+  body.editing .finder { display:flex; }
+  .finder label { font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); font-size:14px; }
+  .finder input { flex:1 1 260px; min-width:0; font:inherit; font-size:16px; padding:10px 14px; border-radius:999px;
+                  border:1.5px solid var(--muted); background:var(--card); color:var(--ink); }
+  .finder button, .act { font:inherit; font-weight:700; border-radius:999px; cursor:pointer; }
+  .finder button { padding:10px 20px; border:0; background:var(--accent); color:#121110; font-size:16px; }
+  .finder .status { flex-basis:100%; color:var(--muted); font-size:14px; min-height:1.2em; }
+  .acts { display:none; margin-top:auto; padding-top:.4vw; }
+  body.editing .acts { display:flex; }
+  .act { font-size:13px; padding:6px 14px; border:1.5px solid var(--muted); background:transparent; color:var(--ink); }
+  .act.pick { background:var(--accent); border-color:var(--accent); color:#121110; }
+  .act:disabled { opacity:.5; cursor:default; }
+  .act:focus-visible, .finder button:focus-visible, .finder input:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .added { color:#a9e0ab; font-weight:700; font-size:13px; }
+  .found { display:none; }
+  body.editing .found { display:block; }
+  .found { margin-bottom:2vw; padding:1vw; border:2px dashed var(--accent); border-radius:16px; }
+  .found-h { font-size:clamp(18px,1.4vw,32px); margin-bottom:1vw; }
+  .found-h span { display:block; font-size:clamp(12px,.8vw,16px); color:var(--muted); font-weight:400; margin-top:4px; }
   .num { display:inline-grid; place-items:center; min-width:1.6em; height:1.6em; margin-right:.4em; border-radius:50%;
          background:var(--accent); color:#121110; font-size:.8em; vertical-align:middle; }
   .src { color:var(--muted); font-size:clamp(11px,.75vw,16px); overflow-wrap:anywhere; }
   .src a { color:var(--ink); }
   .tag.vegan { border-color:#9fbf5a; color:#cde3a0; }
-  .info { min-width:0; display:flex; flex-direction:column; gap:.4vw; }
+  .info { flex:1; min-width:0; display:flex; flex-direction:column; gap:.4vw; }
   .top { display:flex; justify-content:space-between; gap:1vw; align-items:baseline; }
   h2 { font-size:clamp(18px,1.6vw,40px); line-height:1.1; text-wrap:balance; overflow-wrap:anywhere; }
   .abv { color:var(--accent); font-weight:800; font-size:clamp(18px,1.5vw,38px); white-space:nowrap; }
@@ -838,8 +890,58 @@ TEMPLATE = """<!doctype html>
 </style></head>
 <body>
   <header><h1>{{TITLE}}</h1><span>Updated {{UPDATED}}</span></header>
+  <form class="finder" id="finder" hidden>
+    <label for="q">Add a beer</label>
+    <input id="q" name="q" type="search" placeholder="Brewery and beer, e.g. Northern Monk Faith" autocomplete="off" required>
+    <button type="submit">Find</button>
+    <p class="status" id="status" role="status"></p>
+  </form>
+  {{FOUND}}
   <main class="grid">{{CARDS}}
   </main>
+  <script>
+  // Editors get a search box and Add/Remove buttons. Each one sends a request to Claude as a comment;
+  // Claude finds the beer on brewery websites, then republishes this page. TV and shared viewers see the plain wall.
+  (async () => {
+    const use = window.claude && window.claude.use;
+    if (!use) return;
+    const c = await use("comments");
+    if (!c) return;
+    let can = "off";
+    try { can = await c.canSendToClaude(); } catch (e) { return; }
+    if (can !== "available") return;
+    document.body.classList.add("editing");
+    document.getElementById("finder").hidden = false;
+    const status = document.getElementById("status");
+    const say = (t) => { status.textContent = t; };
+    async function send(el, text, btn) {
+      if (btn) btn.disabled = true;
+      say("Sending to Claude\u2026");
+      try {
+        const anchor = await c.anchorFor(el);
+        await c.sendToClaude({ anchor, text });
+        say("Sent. Claude is on it \u2014 this page updates by itself in a minute or two.");
+      } catch (e) {
+        if (btn) btn.disabled = false;
+        say(e && e.code === "consent_required" ? "Allow this page to comment for you, then tap again."
+          : e && e.code === "rate_limited" ? "Too many requests just now. Wait a moment, then try again."
+          : "Couldn\u2019t send that (" + ((e && e.code) || "error") + "). Try again, or comment on the page.");
+      }
+    }
+    document.getElementById("finder").addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const q = document.getElementById("q").value.trim();
+      if (q) send(ev.currentTarget, "find: " + q, ev.submitter);
+    });
+    document.addEventListener("click", (ev) => {
+      const b = ev.target.closest("button.act");
+      if (!b) return;
+      const card = b.closest("article");
+      if (b.classList.contains("pick")) send(card, "add result " + b.dataset.n + ": " + b.dataset.name, b);
+      else send(card, "remove from wall: " + b.dataset.name, b);
+    });
+  })();
+  </script>
 </body></html>
 """
 
@@ -880,6 +982,7 @@ def main():
     sub.add_parser("refresh-art", help="re-download all artwork (smaller files)")
     b = sub.add_parser("build", help="re-render wall.html / beers.csv")
     b.add_argument("--title", help="heading shown on the wall")
+    b.add_argument("--artifact", metavar="DIR", help="also write a copy for claude.ai hosting into DIR")
     a = p.parse_args()
     db = load()
     {"find": cmd_find, "pick": cmd_pick, "search": cmd_search, "follow": cmd_follow, "update": cmd_update, "add": cmd_add, "add-manual": cmd_add_manual,

@@ -16,6 +16,20 @@
   ],
   "beers": [
     {
+      "id": "churchstreetbrew.com:3620772",
+      "name": "Church Street Pilsner",
+      "brewery": "Church Street Brewing Company",
+      "style": "Bohemian Style Pilsner",
+      "abv": "5.1%",
+      "description": "A brilliantly clear pilsner that's crisp and refreshing.",
+      "art_url": "https://static.spotapps.co/spots/20/fdfe7bdcf5464f80c4c92ab4605249/full",
+      "link": "https://churchstreetbrew.com/itasca-church-street-brewing-company-our-beverages",
+      "source_date": "",
+      "in_stock": true,
+      "art": "art/churchstreetbrew.com_3620772.jpg",
+      "added_to_wall": "2026-11-25"
+    },
+    {
       "id": "www.northernmonk.com:15674317898111",
       "name": "Faith",
       "brewery": "Northern Monk",
