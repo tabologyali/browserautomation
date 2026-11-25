@@ -118,6 +118,9 @@ def split_title(title, fallback_style=""):
         else:
             rest.append(p)
     name = rest[0] if rest else title
+    name = re.sub(r"\s*[(\[]?\b(\d+\s*x\s*)?\d+\s*(ml|cl|l|litre)\b[)\]]?\s*$", "", name, flags=re.I) or name
+    if name.isupper() and len(name) > 3:  # 'PILSNER' -> 'Pilsner'
+        name = name.title().replace("'S", "'s").replace("\u2019S", "\u2019s")
     style = rest[-1] if len(rest) > 1 else fallback_style
     return name, abv, style
 
@@ -138,14 +141,13 @@ def from_handle(handle, name):
     rest = re.sub(r"^\d+(ml|cl)-", "", handle[: m.start()])
     slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
     rest = rest[len(slug) + 1:] if slug and rest.startswith(slug + "-") else ""
-    return f"{m.group(1)}.{m.group(2)}%", rest.replace("-", " ").title()
+    style = rest.replace("-", " ").title()
+    return f"{m.group(1)}.{m.group(2)}%", re.sub(r"\b(Ipa|Dipa|Neipa|Ddh|Apa|Xpa|Gf|Ba)\b", lambda x: x.group(1).upper(), style)
 
 
 def from_shopify(p, root, vendor=""):
     ptype = p.get("product_type", "")
     name, abv, style = split_title(p["title"], "" if ptype.lower() in GENERIC_TYPES else ptype)
-    if name.isupper() and len(name) > 3:  # 'FAITH' -> 'Faith'
-        name = name.title().replace("'S", "'s").replace("’S", "’s")
     desc = text(p.get("body_html", ""))
     h_abv, h_style = from_handle(p.get("handle", ""), name)
     imgs = p.get("images") or []
@@ -254,7 +256,7 @@ def squarespace_products(root, collection="shop"):
         for it in data["items"]:
             abv, style, desc = info_line(text(it.get("body") or it.get("excerpt", "")))
             name, t_abv, t_style = split_title(it.get("title", ""))
-            date = dt.datetime.utcfromtimestamp(it["publishOn"] / 1000).date().isoformat() if it.get("publishOn") else ""
+            date = dt.datetime.fromtimestamp(it["publishOn"] / 1000, dt.timezone.utc).date().isoformat() if it.get("publishOn") else ""
             out.append({"id": f"{urllib.parse.urlparse(root).netloc}:{it['id']}", "name": name, "brewery": brewery,
                         "style": style or t_style, "abv": abv or t_abv, "description": desc,
                         "art_url": it.get("assetUrl", ""), "link": root + it.get("fullUrl", ""), "source_date": date})
@@ -431,6 +433,148 @@ def download_art(beer):
     beer["art"] = f"art/{dest.name}"
 
 
+# ---------------------------------------------------------------- find a beer anywhere
+
+DIRECTORY = HERE / "breweries.json"
+FOUND = HERE / "found.json"
+PREVIEW = HERE / "found.html"
+CACHE = HERE / ".cache"
+CACHE_HOURS = 6
+QUERY_STOP = STOP_WORDS | {"pils", "pilsner", "lager", "ipa", "pale", "ale", "stout", "porter", "sour", "beer", "dipa"}
+
+
+def cached_products(br):
+    """A brewery's products, cached for a few hours so repeated searches are quick."""
+    CACHE.mkdir(exist_ok=True)
+    f = CACHE / (re.sub(r"\W+", "_", br["site"]) + ".json")
+    if f.exists() and time.time() - f.stat().st_mtime < CACHE_HOURS * 3600:
+        return json.loads(f.read_text())
+    items = products_for(br)
+    f.write_text(json.dumps(items))
+    return items
+
+
+def words(s):
+    return re.findall(r"[a-z0-9]+", html.unescape(s).lower().replace("\u2019", "'"))
+
+
+def match_score(query, beer):
+    """Share of the query's words found in the beer's brewery, name and style (name words count most)."""
+    q = words(query)
+    if not q:
+        return 0
+    hay = set(words(f"{beer['brewery']} {beer['name']} {beer['style']}"))
+    name = set(words(beer["name"]))
+    key = [w for w in q if w not in QUERY_STOP] or q
+    # a key word must be in the beer's name, unless the key words name the brewery and another word names the beer
+    if not any(w in name for w in key) and not (all(w in hay for w in key) and any(w in name for w in q)):
+        return 0
+    return sum(w in hay for w in q) / len(q) + 0.5 * sum(w in name for w in key) / len(key)
+
+
+def off_search(query):
+    """Open Food Facts: open product database, useful for big brands (supermarket beers)."""
+    url = "https://search.openfoodfacts.org/search?" + urllib.parse.urlencode(
+        {"q": query, "page_size": 10, "fields": "code,product_name,brands,nutriments,image_front_url,quantity,categories_tags"})
+    data = fetch_json(url) or {}
+    out = []
+    for p in data.get("hits", []):
+        cats = " ".join(p.get("categories_tags") or [])
+        name = p.get("product_name") or ""
+        if not name or not re.search(r"beer|lager|ale|pils|stout|bier|cerveza", cats + " " + name, re.I):
+            continue
+        alc = (p.get("nutriments") or {}).get("alcohol_100g")
+        brands = p.get("brands") or ""
+        brands = ", ".join(brands) if isinstance(brands, list) else brands
+        out.append({"id": f"off:{p.get('code')}", "name": name, "brewery": brands.replace("xx:", ""), "style": "",
+                    "abv": f"{alc}%" if alc not in (None, "") else "", "description": "",
+                    "art_url": p.get("image_front_url") or "", "link": f"https://world.openfoodfacts.org/product/{p.get('code')}",
+                    "source_date": "", "in_stock": True})
+    return out
+
+
+def cmd_find(db, a):
+    from concurrent.futures import ThreadPoolExecutor
+    query = a.query
+    sources = {x["site"]: dict(x) for x in json.loads(DIRECTORY.read_text())} if DIRECTORY.exists() else {}
+    for br in db["breweries"]:
+        sources.setdefault(br["site"], dict(br))
+    # "Northern Monk Faith": if the first words are a brewery we don't know yet, find its site too
+    q = words(query)
+    known = {w for x in sources.values() for w in words(x.get("name") or x["site"])}
+    if q and q[0] not in known and not a.quick:
+        for n in (3, 2, 1):
+            if len(q) > n:
+                for root, page in filter(None, (probe(u) for u in candidate_sites(" ".join(q[:n]))[:12])):
+                    plat, coll = detect_platform(root)
+                    if plat:
+                        sources.setdefault(root, {"site": root, "platform": plat, "collection": coll, "name": " ".join(q[:n]).title()})
+                        break
+    print(f"Searching {len(sources)} brewery shops and Open Food Facts for {query!r}...")
+
+    def search(br):
+        try:
+            items = cached_products(br)
+        except Exception:  # noqa: BLE001  a shop being down shouldn't stop the search
+            return []
+        for b in items:
+            b["source_name"] = (br.get("name") or b["brewery"]) + " shop"
+            if br.get("name") and not b["brewery"]:
+                b["brewery"] = br["name"]
+        return items
+
+    with ThreadPoolExecutor(12) as pool:
+        items = [b for group in pool.map(search, sources.values()) for b in group]
+    if not a.no_off:
+        for b in off_search(query):
+            b["source_name"] = "Open Food Facts"
+            items.append(b)
+    scored = [(match_score(query, b), b) for b in items
+              if not NOT_A_BEER.search(b["name"]) and not re.search(r"bag.in.box|\b\d+\s*l\b|\bkeg\b|\bfirkin\b", b["style"] + " " + b["name"], re.I)]
+    hits = [b for s, b in sorted(scored, key=lambda t: -t[0]) if s >= 0.6]
+    seen, results = set(), []
+    for b in hits:  # one row per beer, not per can size
+        k = (b["brewery"].lower(), b["name"].lower(), b["abv"])
+        if k not in seen:
+            seen.add(k)
+            results.append(b)
+    results = results[: a.limit]
+    FOUND.write_text(json.dumps({"query": query, "results": results}, indent=1, ensure_ascii=False))
+    PREVIEW.write_text(TEMPLATE.replace("{{TITLE}}", html.escape(f"Found: {query}"))
+                       .replace("<title>Beer Wall</title>", "<title>Beer Search</title>")
+                       .replace("{{CARDS}}", render_cards(results, numbered=True) if results else
+                                "<p>No matches. Try fewer words, or the brewery's name.</p>")
+                       .replace("Updated {{UPDATED}}", f"{len(results)} match{'es' if len(results) != 1 else ''} \u00b7 nothing added yet"))
+    if not results:
+        print("No matches. Try fewer words, the brewery's name, or `add-manual`.")
+        return
+    for i, b in enumerate(results, 1):
+        stock = "" if b.get("in_stock", True) else "  [sold out]"
+        print(f"\n {i}. {b['name']} \u2014 {b['brewery']}  {b['abv'] or '?%'}  {b['style']}{stock}")
+        if b["description"]:
+            print("    " + b["description"].replace("\n", " ")[:160] + ("..." if len(b["description"]) > 160 else ""))
+        print(f"    art: {'yes' if b['art_url'] else 'none'}   source: {b.get('source_name', '')}  {b['link']}")
+    print(f"\nPreview with artwork: {PREVIEW.relative_to(HERE.parent)}")
+    print("Add one with:  python3 beerwall/beerwall.py pick <number>")
+
+
+def cmd_pick(db, a):
+    if not FOUND.exists():
+        sys.exit("Run `find` first.")
+    results = json.loads(FOUND.read_text())["results"]
+    chosen = []
+    for n in a.numbers:
+        if not 1 <= n <= len(results):
+            sys.exit(f"Pick a number from 1 to {len(results)}.")
+        b = dict(results[n - 1])
+        b.pop("source_name", None)
+        chosen.append(b)
+    if not add_beers(db, chosen):
+        print("Already on the wall.")
+    save(db)
+    cmd_build(db, a)
+
+
 # ---------------------------------------------------------------- commands
 
 def add_beers(db, beers):
@@ -559,8 +703,9 @@ def tap_badge(b, i):
     bottom = html.escape(" \u00b7 ".join(x for x in (b["abv"], b["brewery"].upper()) if x))
     fit_top = ' textLength="232" lengthAdjust="spacingAndGlyphs"' if len(b["name"]) > 16 else ""
     fit_bot = ' textLength="210" lengthAdjust="spacingAndGlyphs"' if len(bottom) > 22 else ""
-    img = (f'<image href="{html.escape(b["art"])}" x="32" y="32" width="136" height="136" '
-           f'preserveAspectRatio="xMidYMid slice" clip-path="url(#c{i})"/>') if b.get("art") else \
+    src = b.get("art") or b.get("art_url") or ""
+    img = (f'<image href="{html.escape(src)}" x="32" y="32" width="136" height="136" '
+           f'preserveAspectRatio="xMidYMid slice" clip-path="url(#c{i})"/>') if src else \
         '<text x="100" y="114" text-anchor="middle" font-size="40">\U0001F37A</text>'
     return f"""<svg class="badge" viewBox="0 0 200 200" role="img" aria-label="{html.escape(b['name'])} tap badge">
         <defs><clipPath id="c{i}"><circle cx="100" cy="100" r="68"/></clipPath>
@@ -606,30 +751,38 @@ def info_tags(b):
     return "".join(f'<span class="tag {c}">{t}</span>' for t, c in tags)
 
 
-def cmd_build(db, a=None):
-    if getattr(a, "title", None):
-        db["title"] = a.title
-        save(db)
-    cards = []
-    for br in sorted({b["brewery"] for b in db["beers"]}):  # same colour each rebuild
+def render_cards(beers, numbered=False):
+    for br in sorted({b["brewery"] for b in beers}):  # same colour each rebuild
         ring_colour(br)
-    for i, b in enumerate(db["beers"]):
+    cards = []
+    for i, b in enumerate(beers):
         art = tap_badge(b, i)
         tags = info_tags(b)
         desc = "".join(f"<p>{html.escape(p)}</p>" for p in b["description"].split("\n") if p.strip())
-        meta = " · ".join(html.escape(x) for x in (b["style"], b["brewery"]) if x)
+        meta = " \u00b7 ".join(html.escape(x) for x in (b["style"], b["brewery"]) if x)
+        num = f'<span class="num">{i + 1}</span>' if numbered else ""
+        src = (f'<div class="src">Source: {html.escape(b.get("source_name", ""))} \u2014 '
+               f'<a href="{html.escape(b["link"])}">{html.escape(b["link"])}</a></div>') if numbered and b.get("link") else ""
         cards.append(f"""
     <article class="beer">
       <div class="art">{art}</div>
       <div class="info">
-        <div class="top"><h2>{html.escape(b['name'])}</h2><span class="abv">{html.escape(b['abv'])}</span></div>
+        <div class="top"><h2>{num}{html.escape(b['name'])}</h2><span class="abv">{html.escape(b['abv'] or '?%')}</span></div>
         <div class="meta">{meta}</div>
         {f'<div class="tags">{tags}</div>' if tags else ''}
-        <div class="desc">{desc}</div>
+        <div class="desc">{desc}</div>{src}
       </div>
     </article>""")
+    return "".join(cards)
+
+
+def cmd_build(db, a=None):
+    if getattr(a, "title", None):
+        db["title"] = a.title
+        save(db)
+    cards = render_cards(db["beers"])
     WALL.write_text(TEMPLATE.replace("{{TITLE}}", html.escape(db["title"]))
-                    .replace("{{CARDS}}", "".join(cards))
+                    .replace("{{CARDS}}", cards)
                     .replace("{{UPDATED}}", dt.date.today().strftime("%d %b %Y")))
     with CSV_OUT.open("w", newline="") as f:
         w = csv.writer(f)
@@ -669,6 +822,10 @@ TEMPLATE = """<!doctype html>
   .tag.strong { border-color:#e0675c; color:#f2a39b; }
   .tag.ba { border-color:#c7955a; color:#e3bf92; }
   .tag.collab { border-color:#b59ad9; color:#d6c4ee; }
+  .num { display:inline-grid; place-items:center; min-width:1.6em; height:1.6em; margin-right:.4em; border-radius:50%;
+         background:var(--accent); color:#121110; font-size:.8em; vertical-align:middle; }
+  .src { color:var(--muted); font-size:clamp(11px,.75vw,16px); overflow-wrap:anywhere; }
+  .src a { color:var(--ink); }
   .tag.vegan { border-color:#9fbf5a; color:#cde3a0; }
   .info { min-width:0; display:flex; flex-direction:column; gap:.4vw; }
   .top { display:flex; justify-content:space-between; gap:1vw; align-items:baseline; }
@@ -690,6 +847,13 @@ TEMPLATE = """<!doctype html>
 def main():
     p = argparse.ArgumentParser(description="Keep a beer wall up to date from brewery websites.")
     sub = p.add_subparsers(dest="cmd", required=True)
+    fd = sub.add_parser("find", help="find a beer by name across brewery shops; shows matches, adds nothing")
+    fd.add_argument("query", help='e.g. "northern monk faith" or "church house pils"')
+    fd.add_argument("--limit", type=int, default=8)
+    fd.add_argument("--quick", action="store_true", help="skip guessing new brewery websites")
+    fd.add_argument("--no-off", action="store_true", help="skip Open Food Facts")
+    pk = sub.add_parser("pick", help="add beers from the last `find` by number")
+    pk.add_argument("numbers", type=int, nargs="+")
     s = sub.add_parser("search", help="find a brewery's website by name and check it can be pulled")
     s.add_argument("name")
     f = sub.add_parser("follow", help="track a brewery's website and pull its beers")
@@ -717,7 +881,7 @@ def main():
     b.add_argument("--title", help="heading shown on the wall")
     a = p.parse_args()
     db = load()
-    {"search": cmd_search, "follow": cmd_follow, "update": cmd_update, "add": cmd_add, "add-manual": cmd_add_manual,
+    {"find": cmd_find, "pick": cmd_pick, "search": cmd_search, "follow": cmd_follow, "update": cmd_update, "add": cmd_add, "add-manual": cmd_add_manual,
      "remove": cmd_remove, "refresh-art": cmd_refresh_art, "list": cmd_list, "build": cmd_build}[a.cmd](db, a)
 
 

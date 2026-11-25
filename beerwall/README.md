@@ -8,6 +8,23 @@ It reads the public product feed behind the brewery's online shop. Supported
 shop types: **Shopify**, **WooCommerce** and **Squarespace**. Only in-stock beers
 are added; merch, spirits, event tickets, mixed packs and gift sets are skipped.
 
+## Find any beer, check it, then add it
+
+```sh
+python3 beerwall/beerwall.py find "northern monk faith"   # lists matches + writes found.html preview
+python3 beerwall/beerwall.py pick 1                        # adds match 1 to the wall
+```
+
+`find` searches the breweries you follow (including sold-out beers), the
+directory of UK brewery shops in `breweries.json` (44 breweries; add more by
+editing it), the brewery's own site if the query starts with a brewery name it
+doesn't know yet, and Open Food Facts for big brands. It shows each match with
+ABV, style, description and the link it came from, and writes `found.html` so
+you can see the artwork and badge before adding anything. Nothing is added
+until you `pick`.
+
+## Follow breweries
+
 ```sh
 python3 beerwall/beerwall.py search "Northern Monk"          # find a brewery's site + check it's supported
 python3 beerwall/beerwall.py follow https://brewyork.co.uk --name "Brew York"

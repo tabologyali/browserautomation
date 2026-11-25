@@ -1,0 +1,266 @@
+[
+ {
+  "name": "Abbeydale",
+  "site": "https://www.abbeydalebrewery.co.uk",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Anspach & Hobday",
+  "site": "https://www.anspachandhobday.com",
+  "platform": "squarespace",
+  "collection": "shop"
+ },
+ {
+  "name": "Arbor",
+  "site": "https://www.arborales.co.uk",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Atom",
+  "site": "https://www.atombeers.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Azvex",
+  "site": "https://www.azvexbrewing.com",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Beavertown",
+  "site": "https://www.beavertownbrewery.co.uk",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Brew York",
+  "site": "https://brewyork.co.uk",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Bristol Beer Factory",
+  "site": "https://www.bristolbeerfactory.co.uk",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Burning Sky",
+  "site": "https://www.burningskybeer.com",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Burnt Mill",
+  "site": "https://www.burntmillbrewery.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Buxton",
+  "site": "https://www.buxtonbrewery.co.uk",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Camden Town",
+  "site": "https://www.camdentownbrewery.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Church Farm",
+  "site": "https://www.churchfarmbrewery.co.uk",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Cloudwater",
+  "site": "https://www.cloudwaterbrew.co",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "DEYA",
+  "site": "https://www.deyabrewing.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Five Points",
+  "site": "https://www.fivepointsbrewing.co.uk",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Fyne Ales",
+  "site": "https://www.fyneales.com",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Harbour",
+  "site": "https://www.harbourbrewing.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Howling Hops",
+  "site": "https://www.howlinghops.co.uk",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Ilkley",
+  "site": "https://www.ilkleybrewery.co.uk",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Left Handed Giant",
+  "site": "https://www.lefthandedgiant.com",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Lost Cause",
+  "site": "https://www.lostcausebrewing.co.uk",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Magic Rock",
+  "site": "https://www.magicrockbrewing.com",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Marble",
+  "site": "https://www.marblebeers.com",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Moor",
+  "site": "https://www.moorbeer.co.uk",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Neon Raptor",
+  "site": "https://www.neonraptorbrewingco.com",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Northern Monk",
+  "site": "https://www.northernmonk.com",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Overtone",
+  "site": "https://www.overtonebrewing.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Pillars",
+  "site": "https://www.pillarsbrewery.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Polly's",
+  "site": "https://www.pollysbrew.co",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "RedWillow",
+  "site": "https://www.redwillowbrewery.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Salt",
+  "site": "https://www.saltbeerfactory.co.uk",
+  "platform": "shopify",
+  "collection": "all-beer"
+ },
+ {
+  "name": "Signature Brew",
+  "site": "https://www.signaturebrew.co.uk",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Siren",
+  "site": "https://www.sirencraftbrew.com",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Sureshot",
+  "site": "https://www.sureshotbrew.com",
+  "platform": "woocommerce",
+  "collection": ""
+ },
+ {
+  "name": "Thornbridge",
+  "site": "https://www.thornbridgebrewery.co.uk",
+  "platform": "shopify",
+  "collection": "all-beer"
+ },
+ {
+  "name": "Track",
+  "site": "https://www.trackbrewing.co",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Unbarred",
+  "site": "https://www.unbarredbrewery.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Unity",
+  "site": "https://www.unitybrewingco.com",
+  "platform": "shopify",
+  "collection": ""
+ },
+ {
+  "name": "Vault City",
+  "site": "https://www.vaultcity.co.uk",
+  "platform": "shopify",
+  "collection": "beers"
+ },
+ {
+  "name": "Verdant",
+  "site": "https://www.verdantbrewing.co",
+  "platform": "shopify",
+  "collection": "all-beer"
+ },
+ {
+  "name": "Vocation",
+  "site": "https://www.vocationbrewery.com",
+  "platform": "shopify",
+  "collection": "all-beer"
+ },
+ {
+  "name": "Wild Beer",
+  "site": "https://www.wildbeerco.com",
+  "platform": "shopify",
+  "collection": "beer"
+ },
+ {
+  "name": "Wiper and True",
+  "site": "https://www.wiperandtrue.com",
+  "platform": "shopify",
+  "collection": "all-beer"
+ }
+]
