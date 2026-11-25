@@ -16,6 +16,20 @@
   ],
   "beers": [
     {
+      "id": "halfacrebeer.com:daisy-cutter",
+      "name": "Daisy Cutter",
+      "brewery": "Half Acre",
+      "style": "Pale Ale",
+      "abv": "5.2%",
+      "description": "Daisy Cutter is one of the first beers we brewed at our Lincoln Ave brewery. It began as a special release bomber and caught fire. Back in 2009, there were some local pale ales that hit with natural power. But not many. Daisy Cutter’s lush and dank characteristics carved out a place within the Chicago brewing landscape. Today, Daisy Cutter is a call brand that we continue to keep raw and relevant. Blended pine, citrus, papaya and mango. Dank. Apparent biscuit, lingering, obscenely dry.",
+      "art_url": "https://i0.wp.com/halfacrebeer.com/wp-content/uploads/2021/08/newdaisy_2-scaled.jpg?fit=2560%2C2560&ssl=1",
+      "link": "https://halfacrebeer.com/beer/daisy-cutter/",
+      "source_date": "",
+      "in_stock": true,
+      "art": "art/halfacrebeer.com_daisy-cutter.jpg",
+      "added_to_wall": "2026-11-25"
+    },
+    {
       "id": "www.blindcornerbrewery.com:drop-ride",
       "name": "Drop Ride",
       "brewery": "Blind Corner Brewery",
