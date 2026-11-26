@@ -222,6 +222,12 @@
   "collection": "all-beer"
  },
  {
+  "site": "https://www.tightheadbrewing.com",
+  "platform": "pages",
+  "collection": "no beer list or shop found on the site",
+  "name": "Tighthead"
+ },
+ {
   "name": "Track",
   "site": "https://www.trackbrewing.co",
   "platform": "shopify",

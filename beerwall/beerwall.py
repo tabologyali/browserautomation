@@ -406,6 +406,8 @@ def products_for(br):
         return squarespace_products(br["site"], br.get("collection", "")) or []
     if platform == "menu":
         return menu_products(br["site"], br.get("collection", ""))
+    if platform == "pages":  # read on demand by `find` (detail_page_beers)
+        return []
     return [from_shopify(p, br["site"]) for p in (shopify_products(br["site"], br.get("collection", "")) or [])]
 
 
@@ -520,7 +522,7 @@ def shrink(data):
         return data, None
 
 
-def download_art(beer):
+def download_art(beer, prefix=""):
     url = beer.get("art_url") or ""
     if not url:
         beer.setdefault("art", "")
@@ -530,7 +532,7 @@ def download_art(beer):
     if "cdn.shopify.com" in url:  # Shopify resizes on request
         url += ("&" if "?" in url else "?") + f"width={ART_SIZE}"
     ART.mkdir(exist_ok=True)
-    stem = re.sub(r"[^\w.-]", "_", beer["id"])
+    stem = prefix + re.sub(r"[^\w.-]", "_", beer["id"])
     existing = next(ART.glob(stem + ".*"), None)
     if existing:
         beer["art"] = f"art/{existing.name}"
@@ -578,6 +580,8 @@ def match_score(query, beer):
     if not q:
         return 0
     brewery = set(words(beer["brewery"])) - STOP_WORDS
+    if all(w in brewery or w in STOP_WORDS for w in q) and brewery:
+        return 1.0  # the query is just this brewery: show its beers
     hay = set(words(f"{beer['brewery']} {beer['name']} {beer['style']}"))
     name = set(words(beer["name"])) - (brewery if not set(words(beer["name"])) <= brewery else set())
     key = [w for w in q if w not in QUERY_STOP and w not in brewery] or [w for w in q if w not in QUERY_STOP] or q
@@ -639,9 +643,17 @@ def detail_page(root, url, brewery):
     desc = max([v for v in block if len(v) > 60] or [meta("og:description")], key=len)
     if not name or not abv:
         return None
+    style = re.sub(r"\b(Ipa|Dipa|Neipa|Ddh|Apa|Xpa|Gf|Ba)\b", lambda m: m.group(1).upper(), style.title()) if style else ""
+    art = meta("og:image")
+    if not art:  # an image named after the beer (e.g. Can-Comfortably-Blonde.png), else the first non-logo picture
+        imgs = [v for k, v in page_lines(h) if k == "img" and not re.search(r"logo|background|btn|button|icon", v, re.I)]
+        slug = urllib.parse.urlparse(url).path.strip("/").split("/")[-1]
+        named = [v for v in imgs if all(w in re.sub(r"[^a-z0-9]+", "-", v.lower()) for w in slug.split("-"))]
+        art = (named or imgs or [""])[0]
+        art = "https:" + art if art.startswith("//") else art
     return {"id": f"{urllib.parse.urlparse(root).netloc}:{urllib.parse.urlparse(url).path.strip('/').split('/')[-1]}",
             "name": name, "brewery": brewery, "style": style, "abv": abv, "description": desc,
-            "art_url": meta("og:image"), "link": url, "source_date": "", "in_stock": True}
+            "art_url": art, "link": url, "source_date": "", "in_stock": True}
 
 
 def detail_page_beers(br, q):
@@ -649,23 +661,25 @@ def detail_page_beers(br, q):
     root = br["site"]
     bwords = set(words(br.get("name") or ""))
     want = [w for w in q if w not in bwords and w not in QUERY_STOP]
-    if not want:
-        return []
-    pages = [root]
     try:
         home = fetch(root, tries=1)
     except Exception:  # noqa: BLE001
         return []
-    links = set()
+    links = []
     for page in [home] + [fetch(u, tries=1) for u in menu_pages(root, home)[:2]]:
         for href in re.findall(r'href="([^"#?]+)"', page):
             u = urllib.parse.urljoin(root + "/", href)
             m = DETAIL_PATH.search(urllib.parse.urlparse(u).path)
-            if m and urllib.parse.urlparse(u).netloc.removeprefix("www.") == urllib.parse.urlparse(root).netloc.removeprefix("www."):
-                links.add(u)
-    hits = [u for u in links if all(w in DETAIL_PATH.search(urllib.parse.urlparse(u).path).group(2).split("-") for w in want)]
-    hits = sorted(hits, key=len)[:4]
-    beers = [detail_page(root, u, br.get("name") or "") for u in hits]
+            if m and urllib.parse.urlparse(u).netloc.removeprefix("www.") == urllib.parse.urlparse(root).netloc.removeprefix("www.") \
+                    and u.rstrip("/") not in [x.rstrip("/") for x in links]:
+                links.append(u)
+    if want:
+        hits = sorted([u for u in links if all(w in DETAIL_PATH.search(urllib.parse.urlparse(u).path).group(2).split("-") for w in want)], key=len)[:4]
+    else:  # just the brewery's name: show its range, in the brewery's own order
+        hits = links[:20]
+    from concurrent.futures import ThreadPoolExecutor as _Pool
+    with _Pool(8) as pool:
+        beers = list(pool.map(lambda u: detail_page(root, u, br.get("name") or ""), hits))
     for b in beers:
         if b:
             b["source_name"] = (br.get("name") or "") + " website"
@@ -685,7 +699,7 @@ def cmd_find(db, a):
     if q and not any(k and q[:len(k)] == k for k in known) and not a.quick:
         from concurrent.futures import ThreadPoolExecutor as _Pool
         for n in (3, 2, 1):
-            if len(q) <= n:
+            if len(q) < n:
                 continue
             with _Pool(16) as pool:
                 hits = [h for h in pool.map(probe, candidate_sites(" ".join(q[:n]))) if h]
@@ -695,6 +709,7 @@ def cmd_find(db, a):
                 if not re.search(r"\b(beers?|brew\w*|ales?|taproom)\b", title, re.I) or root in sources:
                     continue
                 plat, coll = detect_platform(root)
+                plat = plat or "pages"  # no shop or list: per-beer pages may still exist
                 if plat:
                     sources[root] = {"site": root, "platform": plat, "collection": coll, "name": " ".join(q[:n]).title()}
                     try:  # remember it, so later searches without the brewery's name still look there
@@ -739,9 +754,12 @@ def cmd_find(db, a):
         if k not in seen:
             seen.add(k)
             results.append(b)
-    results = results[: a.limit]
-    with ThreadPoolExecutor(8) as pool:  # local copies, so the hosted page can show them
-        list(pool.map(download_art, results))
+    browse = all(any(w in words(b["brewery"]) for b in results[:1]) for w in words(query)) if results else False
+    results = results[: max(a.limit, 20) if browse else a.limit]
+    for old in ART.glob("found_*"):  # pictures from the previous search
+        old.unlink()
+    with ThreadPoolExecutor(8) as pool:  # local copies, so the hosted page can show them (git ignores found_*)
+        list(pool.map(lambda b: download_art(b, "found_"), results))
     FOUND.write_text(json.dumps({"query": query, "results": results}, indent=1, ensure_ascii=False))
     PREVIEW.write_text(TEMPLATE.replace("{{FOUND}}", "").replace("{{TITLE}}", html.escape(f"Found: {query}"))
                        .replace("<title>AliTappd</title>", "<title>Beer Search</title>")
@@ -771,6 +789,12 @@ def cmd_pick(db, a):
             sys.exit(f"Pick a number from 1 to {len(results)}.")
         b = dict(results[n - 1])
         b.pop("source_name", None)
+        if b.get("art", "").startswith("art/found_"):  # keep the search picture for the wall
+            src = HERE / b["art"]
+            dest = src.with_name(src.name[len("found_"):])
+            if src.exists():
+                shutil.copyfile(src, dest)
+            b["art"] = f"art/{dest.name}"
         chosen.append(b)
     if not add_beers(db, chosen):
         print("Already on the wall.")
